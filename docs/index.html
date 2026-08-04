@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Trial landscape</title>
+<style>
+:root{
+  --bg:#fcfcfb; --card:#fff; --ink:#0b0b0b; --ink2:#52514e; --ink3:#898781;
+  --line:rgba(11,11,11,.10); --empty:#efeee9; --accent:#185fa5;
+  --c1:#e6f1fb; --c2:#b5d4f4; --c3:#85b7eb; --c4:#378add; --c5:#185fa5; --c6:#0c447c;
+}
+@media (prefers-color-scheme:dark){
+  :root{--bg:#1a1a19;--card:#232322;--ink:#fff;--ink2:#c3c2b7;--ink3:#898781;
+        --line:rgba(255,255,255,.12);--empty:#2c2c2a;}
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);
+     font:14px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
+.wrap{max-width:1280px;margin:0 auto;padding:24px 20px 60px}
+h1{font-size:22px;font-weight:500;margin:0 0 4px}
+.sub{color:var(--ink2);margin:0 0 16px}
+.stats{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px}
+.stat{background:var(--card);border:.5px solid var(--line);border-radius:10px;
+      padding:10px 14px;min-width:110px}
+.stat .k{font-size:12px;color:var(--ink3)}
+.stat .v{font-size:20px;font-weight:500}
+.stat.new .v{color:var(--accent)}
+.panel{background:var(--card);border:.5px solid var(--line);border-radius:12px;
+       padding:14px 16px;margin-bottom:18px}
+.ctrls{display:grid;grid-template-columns:repeat(auto-fit,minmax(165px,1fr));gap:12px}
+label{display:block;font-size:12px;color:var(--ink3);margin-bottom:4px}
+select,input[type=search]{width:100%;padding:6px 8px;font-size:13px;border-radius:6px;
+  border:.5px solid var(--line);background:var(--bg);color:var(--ink)}
+input[type=range]{width:100%}
+.row{display:flex;align-items:center;gap:8px;font-size:13px}
+.hm{overflow-x:auto;padding-bottom:6px}
+.panels{display:flex;gap:18px;align-items:flex-start}
+.pnl{flex:0 0 auto}
+.pnl h3{font-size:13px;font-weight:500;margin:0 0 6px;color:var(--ink2)}
+.grid{display:grid;gap:2px}
+.cell{width:20px;height:20px;border-radius:2px;background:var(--empty);
+      display:flex;align-items:center;justify-content:center;font-size:10px}
+.cell.f{cursor:pointer}
+.cell.f:hover{outline:2px solid var(--accent)}
+.rl{display:flex;flex-direction:column;gap:2px;flex:0 0 auto}
+.rl div{height:20px;display:flex;align-items:center;justify-content:flex-end;
+        font-size:11px;color:var(--ink2);white-space:nowrap;padding-right:6px}
+.xl{position:relative;height:96px}
+.xl span{position:absolute;bottom:0;transform-origin:left bottom;
+         transform:rotate(-52deg);white-space:nowrap;font-size:11px;color:var(--ink2)}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th,td{text-align:left;padding:7px 8px;border-bottom:.5px solid var(--line);vertical-align:top}
+th{font-weight:500;color:var(--ink3);font-size:12px;cursor:pointer;user-select:none}
+td.tid a{color:var(--accent);text-decoration:none;white-space:nowrap}
+.tag{display:inline-block;background:var(--empty);border-radius:4px;
+     padding:1px 6px;margin:1px 2px 1px 0;font-size:11px}
+.tag.new{background:var(--c2);color:#042c53}
+.legend{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--ink3);margin-top:10px}
+.legend i{width:16px;height:12px;border-radius:2px;display:inline-block}
+footer{margin-top:32px;padding-top:14px;border-top:.5px solid var(--line);
+       font-size:12px;color:var(--ink3)}
+footer a{color:var(--accent)}
+.muted{color:var(--ink3)}
+button{font:inherit;padding:5px 10px;border-radius:6px;border:.5px solid var(--line);
+       background:var(--card);color:var(--ink);cursor:pointer}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1 id="title">Trial landscape</h1>
+  <p class="sub" id="subtitle"></p>
+  <div class="stats" id="stats"></div>
+
+  <div class="panel">
+    <div class="ctrls">
+      <div><label for="f-mod">Modality</label><select id="f-mod"></select></div>
+      <div><label for="f-reg">Registry</label><select id="f-reg"></select></div>
+      <div><label for="f-intent">Intent</label><select id="f-intent"></select></div>
+      <div><label for="f-phase">Phase</label><select id="f-phase"></select></div>
+      <div><label for="f-state">Recruiting state</label><select id="f-state"></select></div>
+      <div><label for="f-group">Tissue group</label><select id="f-group"></select></div>
+      <div><label for="f-min">Min trials per target: <b id="v-min"></b></label>
+           <input type="range" id="f-min" min="1" max="10" step="1"></div>
+      <div><label for="f-max">Max targets: <b id="v-max"></b></label>
+           <input type="range" id="f-max" min="5" max="60" step="1"></div>
+    </div>
+    <div class="row" style="margin-top:12px;flex-wrap:wrap;gap:16px">
+      <label class="row" style="margin:0"><input type="checkbox" id="f-basket"> Hide pan-cancer / basket</label>
+      <label class="row" style="margin:0"><input type="checkbox" id="f-newonly"> New this week only</label>
+      <button id="reset">Reset filters</button>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="hm"><div class="panels" id="hm"></div></div>
+    <div class="legend">Trials
+      <i style="background:var(--c1)"></i><i style="background:var(--c2)"></i>
+      <i style="background:var(--c3)"></i><i style="background:var(--c4)"></i>
+      <i style="background:var(--c5)"></i><i style="background:var(--c6)"></i>
+      1 &rarr; 6+ &nbsp;&middot;&nbsp; click a cell to filter the table
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="row" style="justify-content:space-between;margin-bottom:10px">
+      <div id="tbl-cap" class="muted"></div>
+      <input type="search" id="f-q" placeholder="Search title, target, drug, cancer type" style="max-width:340px">
+    </div>
+    <div style="overflow-x:auto"><table id="tbl"></table></div>
+    <div id="more" style="margin-top:10px"></div>
+  </div>
+
+  <footer>
+    <div id="attrib"></div>
+    <div style="margin-top:4px">Built <span id="gen"></span> ·
+      <a href="https://github.com/nedmcnamee/NedTrialLandscape">source</a></div>
+  </footer>
+</div>
+
+<script>
+const RAMP=['var(--c1)','var(--c2)','var(--c3)','var(--c4)','var(--c5)','var(--c6)'];
+const INK=['#042c53','#042c53','#042c53','#e6f1fb','#e6f1fb','#e6f1fb'];
+let DATA=null, SEL=null, LIMIT=50, SORT={k:'trial_id',d:1};
+
+const $=id=>document.getElementById(id);
+const uniq=a=>[...new Set(a)].sort();
+const el=(t,c,x)=>{const e=document.createElement(t); if(c)e.className=c;
+  if(x!==undefined)e.textContent=x; return e;};
+
+function fillSelect(id,vals,allLabel){
+  const s=$(id); s.innerHTML='';
+  s.appendChild(new Option(allLabel,''));
+  vals.forEach(v=>s.appendChild(new Option(v,v)));
+}
+
+function activeClasses(t,mod){
+  return t.classes.filter(c=>!mod||c.m===mod);
+}
+
+function filtered(){
+  const mod=$('f-mod').value, reg=$('f-reg').value, intent=$('f-intent').value,
+        ph=$('f-phase').value, st=$('f-state').value, grp=$('f-group').value,
+        q=$('f-q').value.trim().toLowerCase(),
+        hideBasket=$('f-basket').checked, newOnly=$('f-newonly').checked,
+        cutoff=DATA.cutoff;
+  return DATA.trials.filter(t=>{
+    if(mod && !t.modalities.includes(mod)) return false;
+    if(reg && t.registry!==reg) return false;
+    if(intent && t.intent!==intent && t.intent!=='Both') return false;
+    if(ph && t.phase!==ph) return false;
+    if(st && !(t.states||[]).includes(st)) return false;
+    if(grp && !t.tissue_groups.includes(grp)) return false;
+    if(newOnly && !(t.first_seen>cutoff)) return false;
+    if(q){
+      const blob=[t.trial_id,t.title||'',(t.drugs||[]).join(' '),
+                  t.cancer_types.join(' '),t.classes.map(c=>c.t).join(' ')]
+                 .join(' ').toLowerCase();
+      if(!blob.includes(q)) return false;
+    }
+    return true;
+  }).map(t=>{
+    const rows = grp ? t.cancer_types.slice()
+                     : (hideBasket ? t.tissue_groups.filter(g=>g!=='Pan-cancer / basket')
+                                   : t.tissue_groups);
+    return {...t, rows};
+  }).filter(t=>t.rows.length);
+}
+
+function buildMatrix(rows){
+  const mod=$('f-mod').value, minCol=+$('f-min').value, maxCol=+$('f-max').value;
+  const cells={}, colTot={}, rowTot={}, panels={};
+  rows.forEach(t=>{
+    const tg=uniq(activeClasses(t,mod).map(c=>c.t));
+    const p=t.intent||'Unspecified';
+    tg.forEach(target=>t.rows.forEach(r=>{
+      const k=p+' '+r+' '+target;
+      (cells[k]=cells[k]||new Set()).add(t.trial_id);
+      colTot[target]=(colTot[target]||0)+0;
+      panels[p]=1;
+    }));
+  });
+  Object.entries(cells).forEach(([k,v])=>{
+    const [,r,c]=k.split(' ');
+    colTot[c]=(colTot[c]||0)+v.size; rowTot[r]=(rowTot[r]||0)+v.size;
+  });
+  const cols=Object.keys(colTot).filter(c=>colTot[c]>=minCol)
+      .sort((a,b)=>colTot[b]-colTot[a]).slice(0,maxCol);
+  const rowNames=Object.keys(rowTot).sort((a,b)=>rowTot[b]-rowTot[a]);
+  return {cells,cols,rowNames,rowTot,colTot,panels:Object.keys(panels).sort()};
+}
+
+function drawHeatmap(rows){
+  const m=buildMatrix(rows), host=$('hm'); host.innerHTML='';
+  if(!m.cols.length){ host.appendChild(el('p','muted','No trials match these filters.')); return; }
+  const mod=$('f-mod').value;
+
+  const labels=el('div','pnl');
+  labels.appendChild(el('div','xl'));
+  const rl=el('div','rl');
+  m.rowNames.forEach(r=>{
+    const d=el('div',null,r); d.title=r+' — '+m.rowTot[r]+' trials'; rl.appendChild(d);
+  });
+  labels.appendChild(rl);
+  host.appendChild(labels);
+
+  m.panels.forEach(p=>{
+    const cols=m.cols.filter(c=>m.rowNames.some(r=>m.cells[p+' '+r+' '+c]));
+    if(!cols.length) return;
+    const pnl=el('div','pnl');
+    pnl.appendChild(el('h3',null,p));
+    const xl=el('div','xl');
+    cols.forEach((c,i)=>{const s=el('span',null,c); s.style.left=(i*22+11)+'px'; xl.appendChild(s);});
+    pnl.appendChild(xl);
+    const g=el('div','grid');
+    g.style.gridTemplateColumns=`repeat(${cols.length},20px)`;
+    m.rowNames.forEach(r=>cols.forEach(c=>{
+      const set=m.cells[p+' '+r+' '+c], n=set?set.size:0;
+      const cell=el('div','cell'+(n?' f':''), n?String(n):'');
+      if(n){
+        const i=Math.min(n,6)-1;
+        cell.style.background=RAMP[i]; cell.style.color=INK[i];
+        cell.title=`${r} × ${c}\n${n} trial${n>1?'s':''} — ${p}`;
+        cell.onclick=()=>{SEL={panel:p,row:r,target:c}; LIMIT=50; render();};
+      }
+      g.appendChild(cell);
+    }));
+    pnl.appendChild(g);
+    host.appendChild(pnl);
+  });
+}
+
+function drawTable(rows){
+  const mod=$('f-mod').value;
+  let show=rows;
+  if(SEL) show=rows.filter(t=>
+      (t.intent||'Unspecified')===SEL.panel &&
+      t.rows.includes(SEL.row) &&
+      activeClasses(t,mod).some(c=>c.t===SEL.target));
+
+  $('tbl-cap').innerHTML = SEL
+    ? `<b>${SEL.target} × ${SEL.row}</b> — ${SEL.panel} · ${show.length} trials
+       <button id="clr" style="margin-left:8px">clear</button>`
+    : `${show.length} trials`;
+  if(SEL) $('clr').onclick=()=>{SEL=null; render();};
+
+  const cols=[['trial_id','Trial'],['title','Title'],['tg','Target'],
+              ['phase','Phase'],['status','Status'],['states','States'],
+              ['n_sites','Sites'],['ct','Cancer types']];
+  show=show.slice().sort((a,b)=>{
+    const f=t=>({...t,tg:activeClasses(t,mod).map(c=>c.t).join(', '),
+                 ct:t.cancer_types.join(', '),states:(t.states||[]).join(', ')})[SORT.k];
+    const x=f(a),y=f(b);
+    return (x>y?1:x<y?-1:0)*SORT.d;
+  });
+
+  const tb=$('tbl'); tb.innerHTML='';
+  const hr=el('tr');
+  cols.forEach(([k,lbl])=>{
+    const th=el('th',null,lbl+(SORT.k===k?(SORT.d>0?' ▲':' ▼'):''));
+    th.onclick=()=>{SORT = SORT.k===k?{k,d:-SORT.d}:{k,d:1}; render();};
+    hr.appendChild(th);
+  });
+  tb.appendChild(hr);
+
+  show.slice(0,LIMIT).forEach(t=>{
+    const tr=el('tr');
+    const td0=el('td','tid');
+    const a=el('a',null,t.trial_id); a.href=t.url; a.target='_blank'; td0.appendChild(a);
+    if(t.first_seen>DATA.cutoff) td0.appendChild(el('span','tag new','new'));
+    tr.appendChild(td0);
+    tr.appendChild(el('td',null,t.title||(t.drugs||[]).join(', ')));
+    const td2=el('td');
+    activeClasses(t,mod).forEach(c=>td2.appendChild(el('span','tag',c.t)));
+    tr.appendChild(td2);
+    tr.appendChild(el('td',null,t.phase));
+    tr.appendChild(el('td',null,t.status));
+    tr.appendChild(el('td',null,(t.states||[]).join(', ')||'—'));
+    tr.appendChild(el('td',null,t.n_sites||'—'));
+    tr.appendChild(el('td',null,t.cancer_types.join('; ')));
+    tb.appendChild(tr);
+  });
+
+  $('more').innerHTML='';
+  if(show.length>LIMIT){
+    const b=el('button',null,`Show 50 more (${show.length-LIMIT} hidden)`);
+    b.onclick=()=>{LIMIT+=50; render();};
+    $('more').appendChild(b);
+  }
+}
+
+function render(){
+  const rows=filtered();
+  $('v-min').textContent=$('f-min').value;
+  $('v-max').textContent=$('f-max').value;
+  drawHeatmap(rows);
+  drawTable(rows);
+}
+
+fetch('data.json').then(r=>r.json()).then(d=>{
+  DATA=d;
+  const cut=new Date(d.generated); cut.setDate(cut.getDate()-8);
+  DATA.cutoff=cut.toISOString().slice(0,10);
+
+  $('title').textContent=d.site.title;
+  $('subtitle').textContent=d.site.subtitle;
+  $('attrib').textContent=d.site.attribution;
+  $('gen').textContent=d.generated;
+
+  const S=[['Trials',d.counts.total],['New this week',d.counts.new_this_week]];
+  Object.entries(d.counts.by_registry).forEach(([k,v])=>S.push([k,v]));
+  S.forEach(([k,v],i)=>{
+    const s=el('div','stat'+(i===1?' new':''));
+    s.appendChild(el('div','k',k)); s.appendChild(el('div','v',String(v)));
+    $('stats').appendChild(s);
+  });
+
+  fillSelect('f-mod',uniq(d.trials.flatMap(t=>t.modalities)),'All modalities');
+  fillSelect('f-reg',uniq(d.trials.map(t=>t.registry)),'All registries');
+  fillSelect('f-intent',uniq(d.trials.map(t=>t.intent)),'All intents');
+  fillSelect('f-phase',uniq(d.trials.map(t=>t.phase)),'All phases');
+  fillSelect('f-state',uniq(d.trials.flatMap(t=>t.states||[])),'Anywhere');
+  fillSelect('f-group',uniq(d.trials.flatMap(t=>t.tissue_groups)),'All tissue groups');
+
+  $('f-mod').value=d.display.default_modality||'';
+  $('f-min').value=d.display.default_min_trials_per_target||2;
+  $('f-max').value=d.display.default_max_targets||25;
+
+  ['f-mod','f-reg','f-intent','f-phase','f-state','f-group','f-min','f-max',
+   'f-basket','f-newonly','f-q'].forEach(id=>{
+    $(id).addEventListener('input',()=>{SEL=null; LIMIT=50; render();});
+  });
+  $('reset').onclick=()=>{
+    ['f-reg','f-intent','f-phase','f-state','f-group','f-q'].forEach(i=>$(i).value='');
+    $('f-basket').checked=$('f-newonly').checked=false;
+    $('f-mod').value=d.display.default_modality||'';
+    SEL=null; LIMIT=50; render();
+  };
+  render();
+}).catch(e=>{
+  document.querySelector('.wrap').insertAdjacentHTML('beforeend',
+    '<p class="muted">Could not load data.json — has the workflow run yet?</p>');
+  console.error(e);
+});
+</script>
+</body>
+</html>

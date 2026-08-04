@@ -1,0 +1,225 @@
+# NedTrialLandscape configuration
+# This is the only file you should normally need to edit.
+
+site:
+  title: "ANZ + global cancer trial landscape"
+  subtitle: "Drug target x tissue, curative vs advanced intent"
+  # Shown in the page footer. ARTiCANZ is CC BY 4.0 and requires attribution.
+  attribution: >
+    ANZ trial data from ARTICANZ (articanz.org), CC BY 4.0.
+    Global data from ClinicalTrials.gov API v2.
+
+sources:
+  articanz:
+    enabled: true
+    # ARTiCANZ refreshes Fridays; the workflow runs Saturday AEST.
+    datasets:
+      advanced: "https://articanz.org/data/ARTICANZ-trials-summary-extra-advanced.tsv"
+      curative: "https://articanz.org/data/ARTICANZ-trials-summary-extra-curative.tsv"
+    # Label shown on the panel split in the heatmap
+    intent_labels:
+      advanced: "Advanced / non-curative"
+      curative: "Curative intent"
+  ctgov:
+    enabled: true
+    start_date: "2018-01-01"
+    phases: ["PHASE1", "PHASE2", "PHASE3"]
+    # Excluded from the primary set (v9 behaviour)
+    exclude_statuses: ["WITHDRAWN", "TERMINATED", "SUSPENDED", "UNKNOWN"]
+    exclude_not_yet_recruiting: true
+    exclude_haematological: true
+
+display:
+  # Modality shown when the page first loads
+  default_modality: "Antibody-drug conjugate"
+  default_min_trials_per_target: 2
+  default_max_targets: 25
+  group_tissues_by_default: true
+
+# Tissue grouping: ARTiCANZ cancer type -> group.
+# Anything not listed lands in 'Unmapped' and is reported by validate.py.
+tissue_groups:
+  "Breast Cancer":
+    - "Breast cancer"
+    - "ER-positive HER2-negative breast cancer"
+    - "ER-positive breast cancer"
+    - "HER2-negative breast cancer"
+    - "HER2-positive breast cancer"
+    - "HR-positive breast cancer"
+    - "Triple-negative breast cancer"
+  "Central Nervous System":
+    - "Adamantinomatous craniopharyngioma"
+    - "Astrocytoma"
+    - "Central nervous system cancer"
+    - "Diffuse intrinsic pontine glioma"
+    - "Diffuse midline glioma"
+    - "Glioblastoma"
+    - "Glioma"
+    - "High-grade glioma"
+    - "Low-grade glioma"
+    - "Malignant glioma"
+    - "Oligodendroglioma"
+  "Endocrine Cancer":
+    - "Differentiated thyroid carcinoma"
+    - "Extra-pulmonary neuroendocrine carcinoma"
+    - "Medullary thyroid cancer"
+    - "Neuroendocrine tumour"
+    - "Pancreatic neuroendocrine tumour"
+    - "Papillary thyroid cancer"
+    - "Paraganglioma"
+    - "Phaeochromocytoma"
+    - "Small-cell neuroendocrine carcinoma"
+    - "Thyroid cancer"
+  "Female Reproductive Cancer":
+    - "Cervical cancer"
+    - "Cervical clear cell carcinoma"
+    - "Endometrial cancer"
+    - "Endometrial carcinoma"
+    - "Endometrial clear cell carcinoma"
+    - "Endometrial endometrioid carcinoma"
+    - "Epithelial Ovarian Cancer"
+    - "Fallopian tube cancer"
+    - "High-grade serous carcinoma of the ovary, fallopian tube, and peritoneum"
+    - "High-grade serous ovarian cancer"
+    - "Low-grade serous ovarian cancer"
+    - "Ovarian cancer"
+    - "Ovarian carcinosarcoma"
+    - "Ovarian clear cell carcinoma"
+    - "Peritoneal cancer"
+    - "Platinum resistant ovarian cancer"
+    - "Primary fallopian tube serous carcinoma"
+    - "Primary peritoneal serous carcinoma"
+    - "Uterine carcinosarcoma"
+    - "Vulval clear cell adenocarcinoma"
+  "Head and Neck Cancers":
+    - "Head and neck cancer"
+    - "Head and neck squamous cell carcinoma"
+    - "Nasopharyngeal carcinoma"
+    - "Oropharyngeal squamous cell carcinoma"
+  "Hepatobiliary Cancer":
+    - "Biliary tract cancer"
+    - "Cholangiocarcinoma"
+    - "Hepatobiliary cancer"
+    - "Hepatocellular carcinoma"
+  "Leukaemias & Myelomas":
+    - "Acute myeloid leukaemia"
+    - "Chronic lymphocytic leukaemia"
+    - "Haematological malignancy"
+    - "Leukaemia"
+    - "Multiple myeloma"
+    - "Myelodysplastic syndrome"
+    - "Myelodysplastic/Myeloproliferative disease"
+    - "Myelofibrosis"
+    - "Systemic mastocytosis"
+  "Lower Gastro-Intestinal Tract Cancer":
+    - "Anal squamous cell carcinoma"
+    - "Colon adenocarcinoma"
+    - "Colorectal adenocarcinoma"
+    - "Colorectal cancer"
+    - "Microsatellite instability-high colorectal cancer"
+    - "Microsatellite stable colorectal cancer"
+    - "Mismatch repair deficient colorectal cancer"
+    - "RAS-mutant colorectal cancer"
+    - "Rectal adenocarcinoma"
+  "Lymphoma":
+    - "B-cell lymphoma"
+    - "B-cell malignancy"
+    - "Diffuse large B-cell lymphoma"
+    - "Follicular lymphoma"
+    - "Lymphoma"
+    - "Mantle cell lymphoma"
+    - "Marginal zone lymphoma"
+    - "Small lymphocytic lymphoma"
+    - "Waldenström Macroglobulinaemia"
+  "Male Reproductive Cancer":
+    - "Castrate-resistant prostate cancer"
+    - "Castrate-sensitive prostate cancer"
+    - "Germ cell tumour"
+    - "Prostate adenocarcinoma"
+    - "Prostate cancer"
+    - "Yolk sac tumour"
+  "Melanoma and Skin Cancer":
+    - "Acral lentiginous melanoma"
+    - "Choroidal melanoma"
+    - "Cutaneous basal cell carcinoma"
+    - "Cutaneous melanoma"
+    - "Cutaneous squamous cell carcinoma"
+    - "Melanoma"
+    - "Merkel cell carcinoma"
+    - "Mucosal melanoma"
+    - "Non-melanoma skin cancer"
+    - "Skin cancer"
+    - "Uveal melanoma"
+  "Not a cancer type (data issue)":
+    - "MET:alteration"
+    - "MET:fusion"
+    - "MTAP:deletion"
+    - "PIK3CA-Related Overgrowth Spectrum"
+    - "cytotoxic_chemotherapy"
+  "Other Cancers":
+    - "Retinoblastoma"
+  "Pan-cancer / basket":
+    - "Adenocarcinoma"
+    - "Cancer"
+    - "Cancer of unknown primary"
+    - "Carcinoma"
+    - "HER2-expressing solid tumour"
+    - "HER2-positive solid tumour"
+    - "HPV-related cancer"
+    - "Microsatellite instability high solid tumour"
+    - "Solid tumour"
+    - "Squamous cell carcinoma"
+    - "dMMR solid cancer"
+  "Pancreatic Cancer":
+    - "Pancreatic adenocarcinoma"
+    - "Pancreatic cancer"
+  "Peripheral Nervous System":
+    - "Neuroblastoma"
+  "Pulmonary Cancer":
+    - "ALK-positive non-small-cell lung cancer"
+    - "EGFR-mutant non-small cell lung cancer"
+    - "Lung adenocarcinoma"
+    - "Lung cancer"
+    - "Lung neuroendocrine tumour"
+    - "Mesothelioma"
+    - "Non-small cell lung cancer"
+    - "Non-squamous non-small-cell lung cancer"
+    - "Pleural mesothelioma"
+    - "Small-cell lung cancer"
+    - "Squamous non-small-cell lung cancer"
+  "Renal & Urinary Cancer":
+    - "Bladder cancer"
+    - "Clear cell renal cell carcinoma"
+    - "Kidney cancer"
+    - "Renal pelvis cancer"
+    - "Urothelial carcinoma"
+    - "Wilms tumour"
+  "Sarcoma":
+    - "Aggressive fibromatosis"
+    - "Alveolar rhabdomyosarcoma"
+    - "Bone cancer"
+    - "Chondrosarcoma"
+    - "Dedifferentiated liposarcoma"
+    - "Embryonal rhabdomyosarcoma"
+    - "Fibrosarcoma"
+    - "Gastrointestinal stromal tumour"
+    - "Leiomyosarcoma"
+    - "Liposarcoma"
+    - "Osteosarcoma"
+    - "Sarcoma"
+    - "Sclerosing rhabdomyosarcoma"
+    - "Soft tissue sarcoma"
+    - "Solitary fibrous tumour"
+    - "Synovial sarcoma"
+    - "Undifferentiated pleomorphic sarcoma"
+  "Upper Gastro-Intestinal Tract Cancer":
+    - "Gastric adenocarcinoma"
+    - "Gastric cancer"
+    - "Gastroesophageal cancer"
+    - "Gastroesophageal junction adenocarcinoma"
+    - "Gastrointestinal cancer"
+    - "Gastrooesophageal adenicarcoma"
+    - "HER2-positive gastric cancer"
+    - "Oesophageal adenocarcinoma"
+    - "Oesophageal cancer"
+    - "Oesophageal squamous cell carcinoma"
