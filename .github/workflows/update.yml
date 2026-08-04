@@ -43,19 +43,25 @@ jobs:
       - name: Validate
         run: python src/validate.py
 
+      # Uses ARTiCANZ's curated ADC calls as ground truth for the
+      # ClinicalTrials.gov regex. Prints missed trials and their drug names.
+      - name: Cross-registry recall audit
+        run: python src/recall.py
+
       - name: Commit refreshed data
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
-          # docs/data.json and data/seen.json are generated artifacts: the copy
-          # we just built always wins. Rebasing would try to merge two machine-
-          # written JSON blobs, so instead reset HEAD onto whatever the remote
-          # is now and re-commit our files on top. No conflict is possible.
+          # docs/data.json, docs/recall.json and data/seen.json are generated
+          # artifacts: the copy we just built always wins. Rebasing would try to
+          # merge two machine-written JSON blobs, so instead reset HEAD onto
+          # whatever the remote is now and re-commit our files on top. No
+          # conflict is possible.
           for attempt in 1 2 3; do
             git fetch origin main
             git reset --soft origin/main
-            git add docs/data.json data/seen.json
+            git add docs/data.json docs/recall.json data/seen.json
             if git diff --staged --quiet; then
               echo "No changes this run."
               exit 0
