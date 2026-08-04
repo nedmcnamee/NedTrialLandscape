@@ -33,8 +33,8 @@ h1{font-size:24px;font-weight:500;margin:0 0 4px}
 details.method summary{cursor:pointer;font-size:13px;color:var(--accent);
        list-style:none;padding:2px 0}
 details.method summary::-webkit-details-marker{display:none}
-details.method summary::before{content:"▸ ";}
-details.method[open] summary::before{content:"▾ ";}
+details.method summary::before{content:"\25b8 ";}
+details.method[open] summary::before{content:"\25be ";}
 details.method div{font-size:13px;color:var(--ink2);margin-top:8px;max-width:78ch}
 details.method p{margin:0 0 8px}
 .ctrls{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px}
@@ -49,6 +49,7 @@ input[type=range]{width:100%}
 .pnl{flex:0 0 auto}
 .pnl h3{font-size:13px;font-weight:500;margin:0;height:var(--hh);
         line-height:var(--hh);color:var(--ink2);white-space:nowrap}
+.pnl h3 b{color:var(--ink);font-weight:500}
 .grid{display:grid;gap:var(--gap)}
 .cell{width:var(--cell);height:var(--cell);border-radius:2px;background:var(--empty);
       display:flex;align-items:center;justify-content:center;font-size:10px}
@@ -56,7 +57,15 @@ input[type=range]{width:100%}
 .cell.f:hover{outline:2px solid var(--accent)}
 .rl{display:flex;flex-direction:column;gap:var(--gap);flex:0 0 auto}
 .rl div{height:var(--cell);display:flex;align-items:center;justify-content:flex-end;
-        font-size:11px;color:var(--ink2);white-space:nowrap;padding-right:6px}
+        gap:8px;font-size:11px;color:var(--ink2);white-space:nowrap;padding-right:6px}
+.rl .n{color:var(--ink3);font-variant-numeric:tabular-nums;min-width:2.2em;
+       text-align:right}
+.tot{display:grid;gap:var(--gap);margin-top:5px;padding-top:4px;
+     border-top:.5px solid var(--line)}
+.tot div{width:var(--cell);text-align:center;font-size:10px;color:var(--ink3);
+         font-variant-numeric:tabular-nums}
+.totlab{height:var(--cell);margin-top:9px;display:flex;align-items:center;
+        justify-content:flex-end;padding-right:6px;font-size:11px;color:var(--ink3)}
 .xl{position:relative;height:96px}
 .xl span{position:absolute;bottom:0;transform-origin:left bottom;
          transform:rotate(-52deg);white-space:nowrap;font-size:11px;color:var(--ink2)}
@@ -93,22 +102,25 @@ button{font:inherit;padding:5px 10px;border-radius:6px;border:.5px solid var(--l
       <p><b>Where the data comes from.</b> Australian and New Zealand trials come
       from <a href="https://articanz.org" target="_blank">ARTiCANZ</a>, a
       specialist-curated registry that annotates each trial with a drug-class
-      ontology — that curated ontology is what makes a target &times; tissue view
-      possible at all. Global trials come from the
+      ontology &mdash; that curated ontology is what makes a target &times; tissue
+      view possible at all. Global trials come from the
       <a href="https://clinicaltrials.gov/data-api/api" target="_blank">ClinicalTrials.gov
       API v2</a>, filtered to confirmed ADCs by drug-name and payload-suffix
       matching ported from a published classifier.</p>
+      <p><b>Reading the totals.</b> Every number counts <i>distinct trials</i>.
+      Margins deliberately do not sum to the grand total: a trial testing two
+      targets, or enrolling several cancer types, legitimately occupies more
+      than one cell. Column totals are the honest per-target counts.</p>
       <p><b>Caveats worth knowing.</b> ARTiCANZ cancer types come from a controlled
       vocabulary and map cleanly onto tissue groups. ClinicalTrials.gov conditions
       are free text resolved by regular expressions, so its tissue grouping is
       less reliable and its ADC detection can miss trials whose drug names aren't
-      yet in the pattern list. Rows are hierarchical, so a trial can appear under
-      more than one cancer type — column totals are the honest trial counts.</p>
+      yet in the pattern list.</p>
       <p><b>Rebuilt weekly</b>, Saturday mornings AEST, after ARTiCANZ's Friday
       refresh. Everything is open:
       <a href="https://github.com/nedmcnamee/NedTrialLandscape" target="_blank">github.com/nedmcnamee/NedTrialLandscape</a>
-      — fork it if you want the same view for a different drug class, or open an
-      issue if a trial looks miscategorised.</p>
+      &mdash; fork it if you want the same view for a different drug class, or open
+      an issue if a trial looks miscategorised.</p>
     </div>
   </details>
 
@@ -137,6 +149,7 @@ button{font:inherit;padding:5px 10px;border-radius:6px;border:.5px solid var(--l
   </div>
 
   <div class="panel">
+    <div id="hm-cap" class="row" style="margin-bottom:10px"></div>
     <div class="hm"><div class="panels" id="hm"></div></div>
     <div class="legend">
       <span>Trials</span>
@@ -144,8 +157,9 @@ button{font:inherit;padding:5px 10px;border-radius:6px;border:.5px solid var(--l
       <i style="background:var(--c3)"></i><i style="background:var(--c4)"></i>
       <i style="background:var(--c5)"></i><i style="background:var(--c6)"></i>
       <span>1 &rarr; 6+</span>
-      <span>&middot; <b>*</b> marks a bispecific ADC, i.e. one antibody binding two
-        targets (<code>EGFR/cMET*</code> = a single conjugate against both)</span>
+      <span>&middot; <b>*</b> marks a bispecific ADC, i.e. one conjugate binding two
+        targets (<code>EGFR/cMET*</code>)</span>
+      <span>&middot; margins are distinct trials and do not sum to the total</span>
       <span>&middot; click a cell to filter the table</span>
     </div>
   </div>
@@ -161,7 +175,7 @@ button{font:inherit;padding:5px 10px;border-radius:6px;border:.5px solid var(--l
 
   <footer>
     <div id="attrib"></div>
-    <div style="margin-top:4px">Built <span id="gen"></span> ·
+    <div style="margin-top:4px">Built <span id="gen"></span> &middot;
       <a href="https://github.com/nedmcnamee/NedTrialLandscape">source &amp; issues</a></div>
   </footer>
 </div>
@@ -186,7 +200,7 @@ function fillSelect(id,vals,allLabel){
 // ClinicalTrials.gov is fetched as an ADC-only set, so the modality selector
 // is meaningless there. Lock it to ADC unless we are looking at ARTiCANZ.
 function syncModality(){
-  const reg=$('f-reg').value, artOnly = reg==='ARTICANZ';
+  const artOnly = $('f-reg').value==='ARTICANZ';
   $('f-mod').disabled=!artOnly;
   if(!artOnly) $('f-mod').value=ADC;
   $('modnote').textContent = artOnly ? ''
@@ -229,50 +243,68 @@ function filtered(){
 // needs a separator that cannot occur in the data.
 const SEP='\u0001';
 
+// Every total is a count of DISTINCT trials, tracked as a Set. Summing cell
+// values would double-count: a trial with two targets, or listed under two
+// cancer types, occupies more than one cell. That also means the margins do
+// not add up to the grand total, which is correct rather than a bug.
 function buildMatrix(rows){
   const mod=$('f-mod').value, minCol=+$('f-min').value, maxCol=+$('f-max').value;
-  const cells={}, colTot={}, rowTot={}, panels={};
+  const cells={}, colSet={}, rowSet={}, panelSet={}, colPanel={};
+  const add=(o,k,id)=>{(o[k]=o[k]||new Set()).add(id);};
   rows.forEach(t=>{
     const tg=uniq(activeClasses(t,mod).map(c=>c.t));
+    if(!tg.length) return;
     const p=t.intent||'Unspecified';
-    tg.forEach(target=>t.rows.forEach(r=>{
-      const k=[p,r,target].join(SEP);
-      (cells[k]=cells[k]||new Set()).add(t.trial_id);
-      panels[p]=1;
-    }));
+    add(panelSet,p,t.trial_id);
+    tg.forEach(target=>{
+      add(colSet,target,t.trial_id);
+      add(colPanel,[p,target].join(SEP),t.trial_id);
+      t.rows.forEach(r=>{
+        add(rowSet,r,t.trial_id);
+        add(cells,[p,r,target].join(SEP),t.trial_id);
+      });
+    });
   });
-  Object.entries(cells).forEach(([k,v])=>{
-    const [,r,c]=k.split(SEP);
-    colTot[c]=(colTot[c]||0)+v.size; rowTot[r]=(rowTot[r]||0)+v.size;
-  });
+  const size=o=>Object.fromEntries(Object.entries(o).map(([k,v])=>[k,v.size]));
+  const colTot=size(colSet), rowTot=size(rowSet);
   const cols=Object.keys(colTot).filter(c=>colTot[c]>=minCol)
-      .sort((a,b)=>colTot[b]-colTot[a]).slice(0,maxCol);
-  const rowNames=Object.keys(rowTot).sort((a,b)=>rowTot[b]-rowTot[a]);
-  return {cells,cols,rowNames,rowTot,colTot,panels:Object.keys(panels).sort()};
+      .sort((a,b)=>colTot[b]-colTot[a]||a.localeCompare(b)).slice(0,maxCol);
+  const rowNames=Object.keys(rowTot).sort((a,b)=>rowTot[b]-rowTot[a]||a.localeCompare(b));
+  return {cells,cols,rowNames,rowTot,colTot,colPanel:size(colPanel),
+          panelTot:size(panelSet),panels:Object.keys(panelSet).sort()};
 }
 
 function drawHeatmap(rows){
   const m=buildMatrix(rows), host=$('hm'); host.innerHTML='';
+  const nTotal=new Set(rows.map(t=>t.trial_id)).size;
+  $('hm-cap').innerHTML =
+    `<b>${nTotal}</b>&nbsp;<span class="muted">distinct trials &middot; ` +
+    `${m.rowNames.length} tissue groups &middot; ${m.cols.length} targets shown</span>`;
   if(!m.cols.length){ host.appendChild(el('p','muted','No trials match these filters.')); return; }
 
-  // Label column must mirror the panel columns exactly: heading, then the
-  // rotated-axis strip, then the rows. Omitting the heading here is what
-  // shifted every label up by one row.
+  // Label column mirrors the panel columns exactly: heading, rotated-axis
+  // strip, rows, totals strip. Omitting the heading shifted every label up.
   const labels=el('div','pnl');
-  labels.appendChild(el('h3',null,' '));
+  labels.appendChild(el('h3',null,' '));
   labels.appendChild(el('div','xl'));
   const rl=el('div','rl');
   m.rowNames.forEach(r=>{
-    const d=el('div',null,r); d.title=r+' — '+m.rowTot[r]+' trials'; rl.appendChild(d);
+    const d=el('div');
+    d.appendChild(el('span','nm',r));
+    d.appendChild(el('span','n',String(m.rowTot[r])));
+    d.title=`${r} — ${m.rowTot[r]} distinct trials`;
+    rl.appendChild(d);
   });
   labels.appendChild(rl);
+  labels.appendChild(el('div','totlab','trials per target'));
   host.appendChild(labels);
 
   m.panels.forEach(p=>{
     const cols=m.cols.filter(c=>m.rowNames.some(r=>m.cells[[p,r,c].join(SEP)]));
     if(!cols.length) return;
     const pnl=el('div','pnl');
-    pnl.appendChild(el('h3',null,p));
+    const h=el('h3'); h.innerHTML=`${p} &middot; <b>${m.panelTot[p]}</b>`;
+    pnl.appendChild(h);
     const xl=el('div','xl');
     cols.forEach((c,i)=>{const s=el('span',null,c); s.style.left=(i*22+11)+'px'; xl.appendChild(s);});
     pnl.appendChild(xl);
@@ -290,6 +322,15 @@ function drawHeatmap(rows){
       g.appendChild(cell);
     }));
     pnl.appendChild(g);
+    const tot=el('div','tot');
+    tot.style.gridTemplateColumns=`repeat(${cols.length},var(--cell))`;
+    cols.forEach(c=>{
+      const n=m.colPanel[[p,c].join(SEP)]||0;
+      const d=el('div',null,n?String(n):'');
+      d.title=`${c} — ${n} distinct trials in ${p}`;
+      tot.appendChild(d);
+    });
+    pnl.appendChild(tot);
     host.appendChild(pnl);
   });
 }
@@ -383,12 +424,10 @@ fetch('data.json').then(r=>r.json()).then(d=>{
 
   const isAdc=t=>t.classes.some(c=>c.m===ADC);
   const adc=d.trials.filter(isAdc);
-  const S=[
-    ['New ADC trials this week', adc.filter(t=>t.first_seen>DATA.cutoff).length, true],
-    ['ARTiCANZ ADC trials', adc.filter(t=>t.registry==='ARTICANZ').length, false],
-    ['ClinicalTrials.gov ADC trials', adc.filter(t=>t.registry==='ClinicalTrials.gov').length, false],
-  ];
-  S.forEach(([k,v,hl])=>{
+  [['New ADC trials this week', adc.filter(t=>t.first_seen>DATA.cutoff).length, true],
+   ['ARTiCANZ ADC trials', adc.filter(t=>t.registry==='ARTICANZ').length, false],
+   ['ClinicalTrials.gov ADC trials', adc.filter(t=>t.registry==='ClinicalTrials.gov').length, false],
+  ].forEach(([k,v,hl])=>{
     const s=el('div','stat'+(hl?' new':''));
     s.appendChild(el('div','k',k)); s.appendChild(el('div','v',String(v)));
     $('stats').appendChild(s);
