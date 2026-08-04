@@ -77,9 +77,13 @@ td.tid a{color:var(--accent);text-decoration:none;white-space:nowrap}
      padding:1px 6px;margin:1px 2px 1px 0;font-size:11px}
 .tag.new{background:var(--c2);color:#042c53}
 .tag.off{background:transparent;border:.5px solid var(--line);color:var(--ink3)}
-.legend{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--ink3);
-        margin-top:10px;flex-wrap:wrap}
-.legend i{width:16px;height:12px;border-radius:2px;display:inline-block}
+.legend{display:flex;align-items:flex-end;gap:10px;font-size:12px;color:var(--ink3);
+        margin-top:12px;flex-wrap:wrap}
+.scale{display:flex;gap:2px;align-items:flex-end}
+.scale div{text-align:center}
+.scale i{width:26px;height:12px;border-radius:2px;display:block}
+.scale span{font-size:10px;font-variant-numeric:tabular-nums;display:block;
+            margin-top:2px;color:var(--ink3)}
 footer{margin-top:32px;padding-top:14px;border-top:.5px solid var(--line);
        font-size:12px;color:var(--ink3)}
 footer a,.method a{color:var(--accent)}
@@ -111,6 +115,10 @@ button{font:inherit;padding:5px 10px;border-radius:6px;border:.5px solid var(--l
       Margins deliberately do not sum to the grand total: a trial testing two
       targets, or enrolling several cancer types, legitimately occupies more
       than one cell. Column totals are the honest per-target counts.</p>
+      <p><b>Reading the colour.</b> The scale is logarithmic and rescales to
+      whatever is on screen, because cell counts differ by an order of magnitude
+      between the two registries. Always read the legend rather than comparing
+      shades across different filter settings.</p>
       <p><b>Caveats worth knowing.</b> ARTiCANZ cancer types come from a controlled
       vocabulary and map cleanly onto tissue groups. ClinicalTrials.gov conditions
       are free text resolved by regular expressions, so its tissue grouping is
@@ -152,15 +160,11 @@ button{font:inherit;padding:5px 10px;border-radius:6px;border:.5px solid var(--l
     <div id="hm-cap" class="row" style="margin-bottom:10px"></div>
     <div class="hm"><div class="panels" id="hm"></div></div>
     <div class="legend">
-      <span>Trials</span>
-      <i style="background:var(--c1)"></i><i style="background:var(--c2)"></i>
-      <i style="background:var(--c3)"></i><i style="background:var(--c4)"></i>
-      <i style="background:var(--c5)"></i><i style="background:var(--c6)"></i>
-      <span>1 &rarr; 6+</span>
-      <span>&middot; <b>*</b> marks a bispecific ADC, i.e. one conjugate binding two
-        targets (<code>EGFR/cMET*</code>)</span>
-      <span>&middot; margins are distinct trials and do not sum to the total</span>
-      <span>&middot; click a cell to filter the table</span>
+      <div><div style="margin-bottom:2px">Trials per cell</div>
+           <div class="scale" id="scale"></div></div>
+      <span><b>*</b> = bispecific ADC, one conjugate binding two targets</span>
+      <span>margins are distinct trials and do not sum to the total</span>
+      <span>click a cell to filter the table</span>
     </div>
   </div>
 
@@ -205,6 +209,43 @@ function syncModality(){
   if(!artOnly) $('f-mod').value=ADC;
   $('modnote').textContent = artOnly ? ''
     : 'ClinicalTrials.gov is collected as an ADC-only set, so modality is fixed.';
+}
+
+/* Colour scale.
+   Cell counts span an order of magnitude between registries: ARTiCANZ tops out
+   around 6, ClinicalTrials.gov around 108. A fixed 1..6 ramp saturates at the
+   third bin and throws away every distinction above it. So the scale is
+   computed from the largest cell currently on screen, and is logarithmic
+   because the distribution is heavily skewed -- most cells are 1-3 with a long
+   thin tail. Below a max of 6 it collapses to a plain 1:1 mapping. */
+function makeScale(max){
+  if(max<=6){
+    const lo=[]; for(let i=1;i<=Math.max(max,1);i++) lo.push(i);
+    while(lo.length<6) lo.push(null);
+    return {lo, bin:n=>Math.min(n,6)-1, max};
+  }
+  const lo=[1];
+  for(let i=1;i<6;i++){
+    const v=Math.ceil(Math.pow(max,i/6));
+    lo.push(v<=lo[i-1] ? lo[i-1]+1 : v);
+  }
+  return {lo, bin:n=>{
+    let b=0; for(let i=5;i>=0;i--) if(n>=lo[i]){b=i;break;}
+    return b;
+  }, max};
+}
+
+function drawScale(sc){
+  const host=$('scale'); host.innerHTML='';
+  RAMP.forEach((col,i)=>{
+    if(sc.lo[i]==null) return;
+    const hi = sc.lo[i+1]!=null ? sc.lo[i+1]-1 : sc.max;
+    const d=el('div');
+    const sw=el('i'); sw.style.background=col; d.appendChild(sw);
+    d.appendChild(el('span',null, hi>sc.lo[i] ? `${sc.lo[i]}–${hi}` : `${sc.lo[i]}`));
+    d.title=`${sc.lo[i]} to ${hi} trials`;
+    host.appendChild(d);
+  });
 }
 
 const activeClasses=(t,mod)=>t.classes.filter(c=>!mod||c.m===mod);
@@ -270,8 +311,14 @@ function buildMatrix(rows){
   const cols=Object.keys(colTot).filter(c=>colTot[c]>=minCol)
       .sort((a,b)=>colTot[b]-colTot[a]||a.localeCompare(b)).slice(0,maxCol);
   const rowNames=Object.keys(rowTot).sort((a,b)=>rowTot[b]-rowTot[a]||a.localeCompare(b));
+  // scale off the cells actually drawn, not every cell computed
+  let maxCell=1;
+  Object.entries(cells).forEach(([k,v])=>{
+    const [,r,c]=k.split(SEP);
+    if(cols.includes(c) && rowNames.includes(r)) maxCell=Math.max(maxCell,v.size);
+  });
   return {cells,cols,rowNames,rowTot,colTot,colPanel:size(colPanel),
-          panelTot:size(panelSet),panels:Object.keys(panelSet).sort()};
+          panelTot:size(panelSet),panels:Object.keys(panelSet).sort(),maxCell};
 }
 
 function drawHeatmap(rows){
@@ -280,7 +327,12 @@ function drawHeatmap(rows){
   $('hm-cap').innerHTML =
     `<b>${nTotal}</b>&nbsp;<span class="muted">distinct trials &middot; ` +
     `${m.rowNames.length} tissue groups &middot; ${m.cols.length} targets shown</span>`;
-  if(!m.cols.length){ host.appendChild(el('p','muted','No trials match these filters.')); return; }
+  if(!m.cols.length){
+    host.appendChild(el('p','muted','No trials match these filters.'));
+    $('scale').innerHTML=''; return;
+  }
+  const sc=makeScale(m.maxCell);
+  drawScale(sc);
 
   // Label column mirrors the panel columns exactly: heading, rotated-axis
   // strip, rows, totals strip. Omitting the heading shifted every label up.
@@ -314,8 +366,9 @@ function drawHeatmap(rows){
       const set=m.cells[[p,r,c].join(SEP)], n=set?set.size:0;
       const cell=el('div','cell'+(n?' f':''), n?String(n):'');
       if(n){
-        const i=Math.min(n,6)-1;
+        const i=sc.bin(n);
         cell.style.background=RAMP[i]; cell.style.color=INK[i];
+        if(n>99) cell.style.fontSize='9px';
         cell.title=`${r} × ${c}\n${n} trial${n>1?'s':''} — ${p}`;
         cell.onclick=()=>{SEL={panel:p,row:r,target:c}; LIMIT=50; render();};
       }
