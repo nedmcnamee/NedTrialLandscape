@@ -106,8 +106,7 @@ button{font:inherit;padding:5px 10px;border-radius:6px;border:.5px solid var(--l
       <p><b>Where the data comes from.</b> Australian and New Zealand trials come
       from <a href="https://articanz.org" target="_blank">ARTiCANZ</a>, a
       specialist-curated registry that annotates each trial with a drug-class
-      ontology &mdash; that curated ontology is what makes a target &times; tissue
-      view possible at all. Global trials come from the
+      ontolog. Global trials come from the
       <a href="https://clinicaltrials.gov/data-api/api" target="_blank">ClinicalTrials.gov
       API v2</a>, filtered to confirmed ADCs by drug-name and payload-suffix
       matching ported from a published classifier.</p>
@@ -116,10 +115,9 @@ button{font:inherit;padding:5px 10px;border-radius:6px;border:.5px solid var(--l
       targets, or enrolling several cancer types, legitimately occupies more
       than one cell. Column totals are the honest per-target counts.</p>
       <p><b>Reading the colour.</b> The scale is logarithmic and rescales to
-      whatever is on screen, because cell counts differ by an order of magnitude
-      between the two registries. Always read the legend rather than comparing
+      whatever is on screen. Always read the legend rather than comparing
       shades across different filter settings.</p>
-      <p><b>Caveats worth knowing.</b> ARTiCANZ cancer types come from a controlled
+      <p><b>Caveats.</b> ARTiCANZ cancer types come from a controlled
       vocabulary and map cleanly onto tissue groups. ClinicalTrials.gov conditions
       are free text resolved by regular expressions, so its tissue grouping is
       less reliable and its ADC detection can miss trials whose drug names aren't
