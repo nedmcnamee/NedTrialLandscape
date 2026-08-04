@@ -18,9 +18,11 @@ permissions:
   pages: write
   id-token: write
 
+# One run at a time. Without this a push-triggered run and a manual run can
+# build in parallel and race each other to push.
 concurrency:
-  group: pages
-  cancel-in-progress: false
+  group: update-trial-landscape
+  cancel-in-progress: true
 
 jobs:
   build:
@@ -45,13 +47,29 @@ jobs:
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add docs/data.json data/seen.json
-          if git diff --staged --quiet; then
-            echo "No changes this run."
-          else
+
+          # docs/data.json and data/seen.json are generated artifacts: the copy
+          # we just built always wins. Rebasing would try to merge two machine-
+          # written JSON blobs, so instead reset HEAD onto whatever the remote
+          # is now and re-commit our files on top. No conflict is possible.
+          for attempt in 1 2 3; do
+            git fetch origin main
+            git reset --soft origin/main
+            git add docs/data.json data/seen.json
+            if git diff --staged --quiet; then
+              echo "No changes this run."
+              exit 0
+            fi
             git commit -m "Weekly refresh $(date -u +%Y-%m-%d)"
-            git push
-          fi
+            if git push origin main; then
+              echo "Pushed on attempt $attempt."
+              exit 0
+            fi
+            echo "Remote moved while we were building; retrying ($attempt/3)."
+            sleep 5
+          done
+          echo "Could not push after 3 attempts."
+          exit 1
 
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
