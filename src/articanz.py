@@ -32,6 +32,17 @@ def fetch_tsv(url: str) -> list[dict]:
     return list(csv.DictReader(io.StringIO(text), delimiter="\t"))
 
 
+def trial_url(tid: str) -> str:
+    """ARTiCANZ aggregates both registries, so link each trial to its own.
+    ANZCTR wants the number WITHOUT the ACTRN prefix in the query string."""
+    if tid.startswith("ACTRN"):
+        return ("https://anzctr.org.au/Trial/Registration/TrialReview.aspx"
+                f"?ACTRN={tid[len('ACTRN'):]}")
+    if tid.startswith("NCT"):
+        return f"https://clinicaltrials.gov/study/{tid}"
+    return f"https://articanz.org/trial/{tid}"
+
+
 def tag_vals(cell: str | None, prefix: str) -> list[str]:
     """Values may contain ':' (facility strings) and ',' (payload suffixes),
     so split on '; ' only and strip one leading 'prefix:'."""
@@ -146,7 +157,7 @@ def build(datasets: dict[str, str], intent_labels: dict[str, str]) -> list[dict]
                                     "recruitmentstatus") or ["UNKNOWN"])[0],
                 "states": sorted(tag_vals(row.get("states_expanded"), "recruitmentstate")),
                 "n_sites": len(tag_vals(row.get("locations_expanded"), "facility")),
-                "url": f"https://articanz.org/trial/{tid}",
+                "url": trial_url(tid),
             }
             if tid in seen:
                 # a trial listed in both files spans both intents

@@ -3,12 +3,14 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Trial landscape</title>
+<title>ADC Trial Landscape</title>
 <style>
 :root{
   --bg:#fcfcfb; --card:#fff; --ink:#0b0b0b; --ink2:#52514e; --ink3:#898781;
   --line:rgba(11,11,11,.10); --empty:#efeee9; --accent:#185fa5;
   --c1:#e6f1fb; --c2:#b5d4f4; --c3:#85b7eb; --c4:#378add; --c5:#185fa5; --c6:#0c447c;
+  --hh:24px;                 /* panel heading height, mirrored in the label column */
+  --cell:20px; --gap:2px;
 }
 @media (prefers-color-scheme:dark){
   :root{--bg:#1a1a19;--card:#232322;--ink:#fff;--ink2:#c3c2b7;--ink3:#898781;
@@ -17,34 +19,43 @@
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--ink);
      font:14px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
-.wrap{max-width:1280px;margin:0 auto;padding:24px 20px 60px}
-h1{font-size:22px;font-weight:500;margin:0 0 4px}
-.sub{color:var(--ink2);margin:0 0 16px}
-.stats{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px}
+.wrap{max-width:1320px;margin:0 auto;padding:24px 20px 60px}
+h1{font-size:24px;font-weight:500;margin:0 0 4px}
+.sub{color:var(--ink2);margin:0 0 14px}
+.stats{display:flex;gap:10px;flex-wrap:wrap;margin:16px 0 20px}
 .stat{background:var(--card);border:.5px solid var(--line);border-radius:10px;
-      padding:10px 14px;min-width:110px}
+      padding:10px 16px;min-width:150px}
 .stat .k{font-size:12px;color:var(--ink3)}
-.stat .v{font-size:20px;font-weight:500}
+.stat .v{font-size:24px;font-weight:500}
 .stat.new .v{color:var(--accent)}
 .panel{background:var(--card);border:.5px solid var(--line);border-radius:12px;
        padding:14px 16px;margin-bottom:18px}
-.ctrls{display:grid;grid-template-columns:repeat(auto-fit,minmax(165px,1fr));gap:12px}
+details.method summary{cursor:pointer;font-size:13px;color:var(--accent);
+       list-style:none;padding:2px 0}
+details.method summary::-webkit-details-marker{display:none}
+details.method summary::before{content:"▸ ";}
+details.method[open] summary::before{content:"▾ ";}
+details.method div{font-size:13px;color:var(--ink2);margin-top:8px;max-width:78ch}
+details.method p{margin:0 0 8px}
+.ctrls{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px}
 label{display:block;font-size:12px;color:var(--ink3);margin-bottom:4px}
 select,input[type=search]{width:100%;padding:6px 8px;font-size:13px;border-radius:6px;
   border:.5px solid var(--line);background:var(--bg);color:var(--ink)}
+select:disabled{opacity:.45;cursor:not-allowed}
 input[type=range]{width:100%}
 .row{display:flex;align-items:center;gap:8px;font-size:13px}
 .hm{overflow-x:auto;padding-bottom:6px}
 .panels{display:flex;gap:18px;align-items:flex-start}
 .pnl{flex:0 0 auto}
-.pnl h3{font-size:13px;font-weight:500;margin:0 0 6px;color:var(--ink2)}
-.grid{display:grid;gap:2px}
-.cell{width:20px;height:20px;border-radius:2px;background:var(--empty);
+.pnl h3{font-size:13px;font-weight:500;margin:0;height:var(--hh);
+        line-height:var(--hh);color:var(--ink2);white-space:nowrap}
+.grid{display:grid;gap:var(--gap)}
+.cell{width:var(--cell);height:var(--cell);border-radius:2px;background:var(--empty);
       display:flex;align-items:center;justify-content:center;font-size:10px}
 .cell.f{cursor:pointer}
 .cell.f:hover{outline:2px solid var(--accent)}
-.rl{display:flex;flex-direction:column;gap:2px;flex:0 0 auto}
-.rl div{height:20px;display:flex;align-items:center;justify-content:flex-end;
+.rl{display:flex;flex-direction:column;gap:var(--gap);flex:0 0 auto}
+.rl div{height:var(--cell);display:flex;align-items:center;justify-content:flex-end;
         font-size:11px;color:var(--ink2);white-space:nowrap;padding-right:6px}
 .xl{position:relative;height:96px}
 .xl span{position:absolute;bottom:0;transform-origin:left bottom;
@@ -56,11 +67,13 @@ td.tid a{color:var(--accent);text-decoration:none;white-space:nowrap}
 .tag{display:inline-block;background:var(--empty);border-radius:4px;
      padding:1px 6px;margin:1px 2px 1px 0;font-size:11px}
 .tag.new{background:var(--c2);color:#042c53}
-.legend{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--ink3);margin-top:10px}
+.tag.off{background:transparent;border:.5px solid var(--line);color:var(--ink3)}
+.legend{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--ink3);
+        margin-top:10px;flex-wrap:wrap}
 .legend i{width:16px;height:12px;border-radius:2px;display:inline-block}
 footer{margin-top:32px;padding-top:14px;border-top:.5px solid var(--line);
        font-size:12px;color:var(--ink3)}
-footer a{color:var(--accent)}
+footer a,.method a{color:var(--accent)}
 .muted{color:var(--ink3)}
 button{font:inherit;padding:5px 10px;border-radius:6px;border:.5px solid var(--line);
        background:var(--card);color:var(--ink);cursor:pointer}
@@ -68,14 +81,43 @@ button{font:inherit;padding:5px 10px;border-radius:6px;border:.5px solid var(--l
 </head>
 <body>
 <div class="wrap">
-  <h1 id="title">Trial landscape</h1>
+  <h1>ADC Trial Landscape</h1>
   <p class="sub" id="subtitle"></p>
+
+  <details class="method">
+    <summary>Methodology &amp; source code</summary>
+    <div>
+      <p><b>What this shows.</b> Antibody-drug conjugate trials arranged by drug
+      target (columns) against tissue group (rows), split by treatment intent.
+      Each cell counts distinct trials; click one to list them.</p>
+      <p><b>Where the data comes from.</b> Australian and New Zealand trials come
+      from <a href="https://articanz.org" target="_blank">ARTiCANZ</a>, a
+      specialist-curated registry that annotates each trial with a drug-class
+      ontology — that curated ontology is what makes a target &times; tissue view
+      possible at all. Global trials come from the
+      <a href="https://clinicaltrials.gov/data-api/api" target="_blank">ClinicalTrials.gov
+      API v2</a>, filtered to confirmed ADCs by drug-name and payload-suffix
+      matching ported from a published classifier.</p>
+      <p><b>Caveats worth knowing.</b> ARTiCANZ cancer types come from a controlled
+      vocabulary and map cleanly onto tissue groups. ClinicalTrials.gov conditions
+      are free text resolved by regular expressions, so its tissue grouping is
+      less reliable and its ADC detection can miss trials whose drug names aren't
+      yet in the pattern list. Rows are hierarchical, so a trial can appear under
+      more than one cancer type — column totals are the honest trial counts.</p>
+      <p><b>Rebuilt weekly</b>, Saturday mornings AEST, after ARTiCANZ's Friday
+      refresh. Everything is open:
+      <a href="https://github.com/nedmcnamee/NedTrialLandscape" target="_blank">github.com/nedmcnamee/NedTrialLandscape</a>
+      — fork it if you want the same view for a different drug class, or open an
+      issue if a trial looks miscategorised.</p>
+    </div>
+  </details>
+
   <div class="stats" id="stats"></div>
 
   <div class="panel">
     <div class="ctrls">
-      <div><label for="f-mod">Modality</label><select id="f-mod"></select></div>
       <div><label for="f-reg">Registry</label><select id="f-reg"></select></div>
+      <div><label for="f-mod">Modality</label><select id="f-mod"></select></div>
       <div><label for="f-intent">Intent</label><select id="f-intent"></select></div>
       <div><label for="f-phase">Phase</label><select id="f-phase"></select></div>
       <div><label for="f-state">Recruiting state</label><select id="f-state"></select></div>
@@ -86,19 +128,25 @@ button{font:inherit;padding:5px 10px;border-radius:6px;border:.5px solid var(--l
            <input type="range" id="f-max" min="5" max="60" step="1"></div>
     </div>
     <div class="row" style="margin-top:12px;flex-wrap:wrap;gap:16px">
+      <label class="row" style="margin:0"><input type="checkbox" id="f-active"> Active trials only</label>
       <label class="row" style="margin:0"><input type="checkbox" id="f-basket"> Hide pan-cancer / basket</label>
       <label class="row" style="margin:0"><input type="checkbox" id="f-newonly"> New this week only</label>
       <button id="reset">Reset filters</button>
+      <span id="modnote" class="muted"></span>
     </div>
   </div>
 
   <div class="panel">
     <div class="hm"><div class="panels" id="hm"></div></div>
-    <div class="legend">Trials
+    <div class="legend">
+      <span>Trials</span>
       <i style="background:var(--c1)"></i><i style="background:var(--c2)"></i>
       <i style="background:var(--c3)"></i><i style="background:var(--c4)"></i>
       <i style="background:var(--c5)"></i><i style="background:var(--c6)"></i>
-      1 &rarr; 6+ &nbsp;&middot;&nbsp; click a cell to filter the table
+      <span>1 &rarr; 6+</span>
+      <span>&middot; <b>*</b> marks a bispecific ADC, i.e. one antibody binding two
+        targets (<code>EGFR/cMET*</code> = a single conjugate against both)</span>
+      <span>&middot; click a cell to filter the table</span>
     </div>
   </div>
 
@@ -114,13 +162,14 @@ button{font:inherit;padding:5px 10px;border-radius:6px;border:.5px solid var(--l
   <footer>
     <div id="attrib"></div>
     <div style="margin-top:4px">Built <span id="gen"></span> ·
-      <a href="https://github.com/nedmcnamee/NedTrialLandscape">source</a></div>
+      <a href="https://github.com/nedmcnamee/NedTrialLandscape">source &amp; issues</a></div>
   </footer>
 </div>
 
 <script>
 const RAMP=['var(--c1)','var(--c2)','var(--c3)','var(--c4)','var(--c5)','var(--c6)'];
 const INK=['#042c53','#042c53','#042c53','#e6f1fb','#e6f1fb','#e6f1fb'];
+const ADC='Antibody-drug conjugate';
 let DATA=null, SEL=null, LIMIT=50, SORT={k:'trial_id',d:1};
 
 const $=id=>document.getElementById(id);
@@ -134,16 +183,24 @@ function fillSelect(id,vals,allLabel){
   vals.forEach(v=>s.appendChild(new Option(v,v)));
 }
 
-function activeClasses(t,mod){
-  return t.classes.filter(c=>!mod||c.m===mod);
+// ClinicalTrials.gov is fetched as an ADC-only set, so the modality selector
+// is meaningless there. Lock it to ADC unless we are looking at ARTiCANZ.
+function syncModality(){
+  const reg=$('f-reg').value, artOnly = reg==='ARTICANZ';
+  $('f-mod').disabled=!artOnly;
+  if(!artOnly) $('f-mod').value=ADC;
+  $('modnote').textContent = artOnly ? ''
+    : 'ClinicalTrials.gov is collected as an ADC-only set, so modality is fixed.';
 }
+
+const activeClasses=(t,mod)=>t.classes.filter(c=>!mod||c.m===mod);
 
 function filtered(){
   const mod=$('f-mod').value, reg=$('f-reg').value, intent=$('f-intent').value,
         ph=$('f-phase').value, st=$('f-state').value, grp=$('f-group').value,
         q=$('f-q').value.trim().toLowerCase(),
         hideBasket=$('f-basket').checked, newOnly=$('f-newonly').checked,
-        cutoff=DATA.cutoff;
+        activeOnly=$('f-active').checked, cutoff=DATA.cutoff;
   return DATA.trials.filter(t=>{
     if(mod && !t.modalities.includes(mod)) return false;
     if(reg && t.registry!==reg) return false;
@@ -151,6 +208,7 @@ function filtered(){
     if(ph && t.phase!==ph) return false;
     if(st && !(t.states||[]).includes(st)) return false;
     if(grp && !t.tissue_groups.includes(grp)) return false;
+    if(activeOnly && !t.active) return false;
     if(newOnly && !(t.first_seen>cutoff)) return false;
     if(q){
       const blob=[t.trial_id,t.title||'',(t.drugs||[]).join(' '),
@@ -167,6 +225,10 @@ function filtered(){
   }).filter(t=>t.rows.length);
 }
 
+// Panel and tissue names contain spaces and slashes, so the composite key
+// needs a separator that cannot occur in the data.
+const SEP='\u0001';
+
 function buildMatrix(rows){
   const mod=$('f-mod').value, minCol=+$('f-min').value, maxCol=+$('f-max').value;
   const cells={}, colTot={}, rowTot={}, panels={};
@@ -174,14 +236,13 @@ function buildMatrix(rows){
     const tg=uniq(activeClasses(t,mod).map(c=>c.t));
     const p=t.intent||'Unspecified';
     tg.forEach(target=>t.rows.forEach(r=>{
-      const k=p+' '+r+' '+target;
+      const k=[p,r,target].join(SEP);
       (cells[k]=cells[k]||new Set()).add(t.trial_id);
-      colTot[target]=(colTot[target]||0)+0;
       panels[p]=1;
     }));
   });
   Object.entries(cells).forEach(([k,v])=>{
-    const [,r,c]=k.split(' ');
+    const [,r,c]=k.split(SEP);
     colTot[c]=(colTot[c]||0)+v.size; rowTot[r]=(rowTot[r]||0)+v.size;
   });
   const cols=Object.keys(colTot).filter(c=>colTot[c]>=minCol)
@@ -193,9 +254,12 @@ function buildMatrix(rows){
 function drawHeatmap(rows){
   const m=buildMatrix(rows), host=$('hm'); host.innerHTML='';
   if(!m.cols.length){ host.appendChild(el('p','muted','No trials match these filters.')); return; }
-  const mod=$('f-mod').value;
 
+  // Label column must mirror the panel columns exactly: heading, then the
+  // rotated-axis strip, then the rows. Omitting the heading here is what
+  // shifted every label up by one row.
   const labels=el('div','pnl');
+  labels.appendChild(el('h3',null,' '));
   labels.appendChild(el('div','xl'));
   const rl=el('div','rl');
   m.rowNames.forEach(r=>{
@@ -205,7 +269,7 @@ function drawHeatmap(rows){
   host.appendChild(labels);
 
   m.panels.forEach(p=>{
-    const cols=m.cols.filter(c=>m.rowNames.some(r=>m.cells[p+' '+r+' '+c]));
+    const cols=m.cols.filter(c=>m.rowNames.some(r=>m.cells[[p,r,c].join(SEP)]));
     if(!cols.length) return;
     const pnl=el('div','pnl');
     pnl.appendChild(el('h3',null,p));
@@ -213,9 +277,9 @@ function drawHeatmap(rows){
     cols.forEach((c,i)=>{const s=el('span',null,c); s.style.left=(i*22+11)+'px'; xl.appendChild(s);});
     pnl.appendChild(xl);
     const g=el('div','grid');
-    g.style.gridTemplateColumns=`repeat(${cols.length},20px)`;
+    g.style.gridTemplateColumns=`repeat(${cols.length},var(--cell))`;
     m.rowNames.forEach(r=>cols.forEach(c=>{
-      const set=m.cells[p+' '+r+' '+c], n=set?set.size:0;
+      const set=m.cells[[p,r,c].join(SEP)], n=set?set.size:0;
       const cell=el('div','cell'+(n?' f':''), n?String(n):'');
       if(n){
         const i=Math.min(n,6)-1;
@@ -247,11 +311,10 @@ function drawTable(rows){
   const cols=[['trial_id','Trial'],['title','Title'],['tg','Target'],
               ['phase','Phase'],['status','Status'],['states','States'],
               ['n_sites','Sites'],['ct','Cancer types']];
-  show=show.slice().sort((a,b)=>{
-    const f=t=>({...t,tg:activeClasses(t,mod).map(c=>c.t).join(', '),
+  const key=t=>({...t,tg:activeClasses(t,mod).map(c=>c.t).join(', '),
                  ct:t.cancer_types.join(', '),states:(t.states||[]).join(', ')})[SORT.k];
-    const x=f(a),y=f(b);
-    return (x>y?1:x<y?-1:0)*SORT.d;
+  show=show.slice().sort((a,b)=>{
+    const x=key(a),y=key(b); return (x>y?1:x<y?-1:0)*SORT.d;
   });
 
   const tb=$('tbl'); tb.innerHTML='';
@@ -268,6 +331,7 @@ function drawTable(rows){
     const td0=el('td','tid');
     const a=el('a',null,t.trial_id); a.href=t.url; a.target='_blank'; td0.appendChild(a);
     if(t.first_seen>DATA.cutoff) td0.appendChild(el('span','tag new','new'));
+    if(!t.active) td0.appendChild(el('span','tag off','closed'));
     tr.appendChild(td0);
     tr.appendChild(el('td',null,t.title||(t.drugs||[]).join(', ')));
     const td2=el('td');
@@ -290,11 +354,22 @@ function drawTable(rows){
 }
 
 function render(){
-  const rows=filtered();
+  syncModality();
   $('v-min').textContent=$('f-min').value;
   $('v-max').textContent=$('f-max').value;
+  const rows=filtered();
   drawHeatmap(rows);
   drawTable(rows);
+}
+
+function applyDefaults(d){
+  $('f-reg').value='ARTICANZ';
+  $('f-mod').value=ADC;
+  ['f-intent','f-phase','f-state','f-group','f-q'].forEach(i=>$(i).value='');
+  $('f-active').checked=$('f-basket').checked=$('f-newonly').checked=false;
+  $('f-min').value=d.display.default_min_trials_per_target||2;
+  $('f-max').value=d.display.default_max_targets||25;
+  SEL=null; LIMIT=50;
 }
 
 fetch('data.json').then(r=>r.json()).then(d=>{
@@ -302,40 +377,36 @@ fetch('data.json').then(r=>r.json()).then(d=>{
   const cut=new Date(d.generated); cut.setDate(cut.getDate()-8);
   DATA.cutoff=cut.toISOString().slice(0,10);
 
-  $('title').textContent=d.site.title;
   $('subtitle').textContent=d.site.subtitle;
   $('attrib').textContent=d.site.attribution;
   $('gen').textContent=d.generated;
 
-  const S=[['Trials',d.counts.total],['New this week',d.counts.new_this_week]];
-  Object.entries(d.counts.by_registry).forEach(([k,v])=>S.push([k,v]));
-  S.forEach(([k,v],i)=>{
-    const s=el('div','stat'+(i===1?' new':''));
+  const isAdc=t=>t.classes.some(c=>c.m===ADC);
+  const adc=d.trials.filter(isAdc);
+  const S=[
+    ['New ADC trials this week', adc.filter(t=>t.first_seen>DATA.cutoff).length, true],
+    ['ARTiCANZ ADC trials', adc.filter(t=>t.registry==='ARTICANZ').length, false],
+    ['ClinicalTrials.gov ADC trials', adc.filter(t=>t.registry==='ClinicalTrials.gov').length, false],
+  ];
+  S.forEach(([k,v,hl])=>{
+    const s=el('div','stat'+(hl?' new':''));
     s.appendChild(el('div','k',k)); s.appendChild(el('div','v',String(v)));
     $('stats').appendChild(s);
   });
 
-  fillSelect('f-mod',uniq(d.trials.flatMap(t=>t.modalities)),'All modalities');
   fillSelect('f-reg',uniq(d.trials.map(t=>t.registry)),'All registries');
+  fillSelect('f-mod',uniq(d.trials.flatMap(t=>t.modalities)),'All modalities');
   fillSelect('f-intent',uniq(d.trials.map(t=>t.intent)),'All intents');
   fillSelect('f-phase',uniq(d.trials.map(t=>t.phase)),'All phases');
   fillSelect('f-state',uniq(d.trials.flatMap(t=>t.states||[])),'Anywhere');
   fillSelect('f-group',uniq(d.trials.flatMap(t=>t.tissue_groups)),'All tissue groups');
 
-  $('f-mod').value=d.display.default_modality||'';
-  $('f-min').value=d.display.default_min_trials_per_target||2;
-  $('f-max').value=d.display.default_max_targets||25;
-
-  ['f-mod','f-reg','f-intent','f-phase','f-state','f-group','f-min','f-max',
-   'f-basket','f-newonly','f-q'].forEach(id=>{
+  applyDefaults(d);
+  ['f-reg','f-mod','f-intent','f-phase','f-state','f-group','f-min','f-max',
+   'f-active','f-basket','f-newonly','f-q'].forEach(id=>{
     $(id).addEventListener('input',()=>{SEL=null; LIMIT=50; render();});
   });
-  $('reset').onclick=()=>{
-    ['f-reg','f-intent','f-phase','f-state','f-group','f-q'].forEach(i=>$(i).value='');
-    $('f-basket').checked=$('f-newonly').checked=false;
-    $('f-mod').value=d.display.default_modality||'';
-    SEL=null; LIMIT=50; render();
-  };
+  $('reset').onclick=()=>{applyDefaults(d); render();};
   render();
 }).catch(e=>{
   document.querySelector('.wrap').insertAdjacentHTML('beforeend',

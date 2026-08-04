@@ -52,6 +52,17 @@ CTG_RULES = [
 ]
 CTG_RULES = [(g, re.compile(p, re.I)) for g, p in CTG_RULES]
 
+# A trial is "active" if it is open, about to open, or still running.
+# Everything else -- completed, terminated, withdrawn, suspended, unknown --
+# is history and can be hidden with the site's "Active trials only" toggle.
+ACTIVE_STATUSES = {
+    "RECRUITING",
+    "NOT_YET_RECRUITING",
+    "ENROLLING_BY_INVITATION",
+    "ACTIVE_NOT_RECRUITING",
+    "AVAILABLE",
+}
+
 
 def load_config() -> dict:
     return yaml.safe_load(CONFIG.read_text(encoding="utf-8"))
@@ -96,6 +107,7 @@ def main() -> int:
 
     for r in records:
         r["tissue_groups"] = group_tissues(r["cancer_types"], lut)
+        r["active"] = r["status"].upper() in ACTIVE_STATUSES
 
     # first-seen tracking -> "new this week" without storing weekly snapshots
     today = date.today().isoformat()
