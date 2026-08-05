@@ -1,11 +1,20 @@
 {
  "articanz_adc": 137,
  "articanz_adc_with_nct": 136,
- "matched": 57,
- "recall_pct": 41.9,
+ "matched": 101,
+ "recall_pct": 74.3,
+ "recall_in_scope_pct": 82.8,
+ "policy_excluded": 14,
+ "classifier_missed": 21,
+ "policy_reasons": {
+  "haematological": 1,
+  "status:UNKNOWN": 3,
+  "not_yet_recruiting": 10
+ },
  "missing": [
   {
    "nct_id": "NCT04830202",
+   "reason": "never_retrieved",
    "drugs": [
     "Telisotuzumab Vedotin"
    ],
@@ -18,6 +27,7 @@
   },
   {
    "nct_id": "NCT05150691",
+   "reason": "never_retrieved",
    "drugs": [
     "Trastuzumab Pamirtecan"
    ],
@@ -30,6 +40,7 @@
   },
   {
    "nct_id": "NCT05277168",
+   "reason": "never_retrieved",
    "drugs": [
     "Garetatug Rezetecan"
    ],
@@ -41,56 +52,8 @@
    ]
   },
   {
-   "nct_id": "NCT05279300",
-   "drugs": [
-    "CS5001"
-   ],
-   "targets": [
-    "ROR1"
-   ],
-   "cancer_types": [
-    "Lymphoma",
-    "Solid tumour"
-   ]
-  },
-  {
-   "nct_id": "NCT05636215",
-   "drugs": [
-    "IBI354"
-   ],
-   "targets": [
-    "ERBB2"
-   ],
-   "cancer_types": [
-    "Solid tumour"
-   ]
-  },
-  {
-   "nct_id": "NCT05642949",
-   "drugs": [
-    "MHB036C"
-   ],
-   "targets": [
-    "Trop2"
-   ],
-   "cancer_types": [
-    "Solid tumour"
-   ]
-  },
-  {
-   "nct_id": "NCT05652855",
-   "drugs": [
-    "MHB088C"
-   ],
-   "targets": [
-    "B7H3"
-   ],
-   "cancer_types": [
-    "Solid tumour"
-   ]
-  },
-  {
    "nct_id": "NCT05718895",
+   "reason": "no_adc_vocabulary",
    "drugs": [
     "ATG 022"
    ],
@@ -102,34 +65,8 @@
    ]
   },
   {
-   "nct_id": "NCT05725291",
-   "drugs": [
-    "AMT-116"
-   ],
-   "targets": [
-    "CD44v9"
-   ],
-   "cancer_types": [
-    "Solid tumour"
-   ]
-  },
-  {
-   "nct_id": "NCT05797168",
-   "drugs": [
-    "Torvutatug Samrotecan"
-   ],
-   "targets": [
-    "FR-alpha"
-   ],
-   "cancer_types": [
-    "Endometrial cancer",
-    "Lung adenocarcinoma",
-    "Ovarian cancer",
-    "Squamous non-small-cell lung cancer"
-   ]
-  },
-  {
    "nct_id": "NCT05872295",
+   "reason": "no_adc_vocabulary",
    "drugs": [
     "Caxmotabart Entudotin"
    ],
@@ -144,68 +81,8 @@
    ]
   },
   {
-   "nct_id": "NCT05906862",
-   "drugs": [
-    "AMT-253"
-   ],
-   "targets": [
-    "MUC18"
-   ],
-   "cancer_types": [
-    "Solid tumour"
-   ]
-  },
-  {
-   "nct_id": "NCT05914116",
-   "drugs": [
-    "DB-1311"
-   ],
-   "targets": [
-    "B7H3"
-   ],
-   "cancer_types": [
-    "Solid tumour"
-   ]
-  },
-  {
-   "nct_id": "NCT05923008",
-   "drugs": [
-    "IBI130"
-   ],
-   "targets": [
-    "Trop2"
-   ],
-   "cancer_types": [
-    "Solid tumour"
-   ]
-  },
-  {
-   "nct_id": "NCT06199908",
-   "drugs": [
-    "AMT-562"
-   ],
-   "targets": [
-    "ERBB3"
-   ],
-   "cancer_types": [
-    "Solid tumour"
-   ]
-  },
-  {
-   "nct_id": "NCT06234423",
-   "drugs": [
-    "CUSP06"
-   ],
-   "targets": [
-    "CDH6"
-   ],
-   "cancer_types": [
-    "Ovarian cancer",
-    "Solid tumour"
-   ]
-  },
-  {
    "nct_id": "NCT06242470",
+   "reason": "no_adc_vocabulary",
    "drugs": [
     "Vobramitamab Tavatecan"
    ],
@@ -237,6 +114,7 @@
   },
   {
    "nct_id": "NCT06340568",
+   "reason": "no_adc_vocabulary",
    "drugs": [
     "Trastuzumab Pamirtecan"
    ],
@@ -248,49 +126,8 @@
    ]
   },
   {
-   "nct_id": "NCT06349408",
-   "drugs": [
-    "IBI3001"
-   ],
-   "targets": [
-    "EGFR/B7H3*"
-   ],
-   "cancer_types": [
-    "Solid tumour"
-   ]
-  },
-  {
-   "nct_id": "NCT06384352",
-   "drugs": [
-    "YL211"
-   ],
-   "targets": [
-    "cMET"
-   ],
-   "cancer_types": [
-    "Solid tumour"
-   ]
-  },
-  {
-   "nct_id": "NCT06400472",
-   "drugs": [
-    "LY4170156"
-   ],
-   "targets": [
-    "FR-alpha"
-   ],
-   "cancer_types": [
-    "Cervical cancer",
-    "Colorectal cancer",
-    "Endometrial cancer",
-    "Non-small cell lung cancer",
-    "Ovarian cancer",
-    "Pancreatic cancer",
-    "Triple-negative breast cancer"
-   ]
-  },
-  {
    "nct_id": "NCT06400485",
+   "reason": "never_retrieved",
    "drugs": [
     "AMT-676"
    ],
@@ -302,20 +139,8 @@
    ]
   },
   {
-   "nct_id": "NCT06431594",
-   "drugs": [
-    "Mocertatug Rezetecan"
-   ],
-   "targets": [
-    "B7H4"
-   ],
-   "cancer_types": [
-    "Cancer",
-    "Solid tumour"
-   ]
-  },
-  {
    "nct_id": "NCT06435429",
+   "reason": "adc_not_in_arm",
    "drugs": [
     "Trastuzumab",
     "Trastuzumab Deruxtecan",
@@ -329,81 +154,8 @@
    ]
   },
   {
-   "nct_id": "NCT06465069",
-   "drugs": [
-    "LY4052031"
-   ],
-   "targets": [
-    "NECTIN4"
-   ],
-   "cancer_types": [
-    "Bladder cancer",
-    "Cervical cancer",
-    "Head and neck squamous cell carcinoma",
-    "Non-small cell lung cancer",
-    "Oesophageal cancer",
-    "Ovarian cancer",
-    "Pancreatic cancer",
-    "Prostate cancer",
-    "Renal pelvis cancer",
-    "Solid tumour",
-    "Triple-negative breast cancer"
-   ]
-  },
-  {
-   "nct_id": "NCT06475937",
-   "drugs": [
-    "DM001"
-   ],
-   "targets": [
-    "EGFR/Trop2*"
-   ],
-   "cancer_types": [
-    "Breast cancer",
-    "Non-small cell lung cancer",
-    "Solid tumour"
-   ]
-  },
-  {
-   "nct_id": "NCT06515990",
-   "drugs": [
-    "DM005"
-   ],
-   "targets": [
-    "EGFR/cMET*"
-   ],
-   "cancer_types": [
-    "Head and neck squamous cell carcinoma",
-    "Non-small cell lung cancer",
-    "Solid tumour"
-   ]
-  },
-  {
-   "nct_id": "NCT06596473",
-   "drugs": [
-    "BG-C477"
-   ],
-   "targets": [
-    "CEACAM5"
-   ],
-   "cancer_types": [
-    "Solid tumour"
-   ]
-  },
-  {
-   "nct_id": "NCT06613009",
-   "drugs": [
-    "IBI3009"
-   ],
-   "targets": [
-    "DLL3"
-   ],
-   "cancer_types": [
-    "Small-cell lung cancer"
-   ]
-  },
-  {
    "nct_id": "NCT06656390",
+   "reason": "no_adc_vocabulary",
    "drugs": [
     "ALK-201"
    ],
@@ -417,6 +169,7 @@
   },
   {
    "nct_id": "NCT06690775",
+   "reason": "never_retrieved",
    "drugs": [
     "Ixotatug vedotin"
    ],
@@ -431,6 +184,7 @@
   },
   {
    "nct_id": "NCT06707610",
+   "reason": "no_adc_vocabulary",
    "drugs": [
     "ALK-202"
    ],
@@ -443,44 +197,8 @@
    ]
   },
   {
-   "nct_id": "NCT06730386",
-   "drugs": [
-    "AK138D1"
-   ],
-   "targets": [
-    "ERBB3"
-   ],
-   "cancer_types": [
-    "Solid tumour"
-   ]
-  },
-  {
-   "nct_id": "NCT06751329",
-   "drugs": [
-    "DM002"
-   ],
-   "targets": [
-    "ERBB3/MUC1*"
-   ],
-   "cancer_types": [
-    "Colorectal adenocarcinoma",
-    "Pancreatic adenocarcinoma"
-   ]
-  },
-  {
-   "nct_id": "NCT06796907",
-   "drugs": [
-    "Mocertatug Rezetecan"
-   ],
-   "targets": [
-    "B7H4"
-   ],
-   "cancer_types": [
-    "Cancer"
-   ]
-  },
-  {
    "nct_id": "NCT06827236",
+   "reason": "adc_not_in_arm",
    "drugs": [
     "Pumitamig",
     "Trastuzumab Pamirtecan"
@@ -493,19 +211,8 @@
    ]
   },
   {
-   "nct_id": "NCT06885034",
-   "drugs": [
-    "GSK5764227"
-   ],
-   "targets": [
-    "B7H3"
-   ],
-   "cancer_types": [
-    "Gastrointestinal cancer"
-   ]
-  },
-  {
    "nct_id": "NCT06892548",
+   "reason": "adc_not_in_arm",
    "drugs": [
     "DB-1311",
     "Pumitamig"
@@ -518,123 +225,8 @@
    ]
   },
   {
-   "nct_id": "NCT06929663",
-   "drugs": [
-    "AK146D1"
-   ],
-   "targets": [
-    "Trop2/Nectin4*"
-   ],
-   "cancer_types": [
-    "Solid tumour"
-   ]
-  },
-  {
-   "nct_id": "NCT06953089",
-   "drugs": [
-    "DB-1311",
-    "Pumitamig",
-    "Sacituzumab Drozuntecan"
-   ],
-   "targets": [
-    "B7H3",
-    "Trop2"
-   ],
-   "cancer_types": [
-    "Cervical cancer",
-    "Head and neck squamous cell carcinoma",
-    "Hepatocellular carcinoma",
-    "Melanoma",
-    "Non-small cell lung cancer",
-    "Ovarian cancer"
-   ]
-  },
-  {
-   "nct_id": "NCT06956690",
-   "drugs": [
-    "ENV-501"
-   ],
-   "targets": [
-    "ERBB3"
-   ],
-   "cancer_types": [
-    "Breast cancer",
-    "Melanoma",
-    "Non-small cell lung cancer"
-   ]
-  },
-  {
-   "nct_id": "NCT07042100",
-   "drugs": [
-    "SBO-154"
-   ],
-   "targets": [
-    "MUC1"
-   ],
-   "cancer_types": [
-    "Solid tumour"
-   ]
-  },
-  {
-   "nct_id": "NCT07070232",
-   "drugs": [
-    "BNT326"
-   ],
-   "targets": [
-    "ERBB3"
-   ],
-   "cancer_types": [
-    "Breast cancer",
-    "Cervical cancer",
-    "Colorectal adenocarcinoma",
-    "Gastroesophageal junction adenocarcinoma",
-    "Melanoma",
-    "Mucosal melanoma",
-    "Non-small cell lung cancer",
-    "Solid tumour",
-    "Uveal melanoma"
-   ]
-  },
-  {
-   "nct_id": "NCT07099898",
-   "drugs": [
-    "GSK5764227",
-    "Topotecan"
-   ],
-   "targets": [
-    "B7H3"
-   ],
-   "cancer_types": [
-    "Small-cell lung cancer"
-   ]
-  },
-  {
-   "nct_id": "NCT07111520",
-   "drugs": [
-    "BNT326",
-    "Pumitamig"
-   ],
-   "targets": [
-    "ERBB3"
-   ],
-   "cancer_types": [
-    "Non-small cell lung cancer"
-   ]
-  },
-  {
-   "nct_id": "NCT07112222",
-   "drugs": [
-    "LM-350"
-   ],
-   "targets": [
-    "CDH17"
-   ],
-   "cancer_types": [
-    "Cancer"
-   ]
-  },
-  {
    "nct_id": "NCT07144280",
+   "reason": "no_adc_vocabulary",
    "drugs": [
     "Docetaxel",
     "Fetrastobart Vedotin"
@@ -648,20 +240,8 @@
    ]
   },
   {
-   "nct_id": "NCT07147348",
-   "drugs": [
-    "BNT3212",
-    "Pumitamig"
-   ],
-   "targets": [
-    "EGFR/ERBB3*"
-   ],
-   "cancer_types": [
-    "Solid tumour"
-   ]
-  },
-  {
    "nct_id": "NCT07166094",
+   "reason": "adc_not_in_arm",
    "drugs": [
     "Rinatabart sesutecan"
    ],
@@ -674,6 +254,7 @@
   },
   {
    "nct_id": "NCT07174583",
+   "reason": "never_retrieved",
    "drugs": [
     "SHR-4849"
    ],
@@ -685,48 +266,8 @@
    ]
   },
   {
-   "nct_id": "NCT07181681",
-   "drugs": [
-    "BG-C0902"
-   ],
-   "targets": [
-    "EGFR/cMET*"
-   ],
-   "cancer_types": [
-    "Solid tumour"
-   ]
-  },
-  {
-   "nct_id": "NCT07197827",
-   "drugs": [
-    "YL242"
-   ],
-   "targets": [
-    "VEGF"
-   ],
-   "cancer_types": [
-    "Solid tumour"
-   ]
-  },
-  {
-   "nct_id": "NCT07213804",
-   "drugs": [
-    "Bevacizumab",
-    "LY4170156",
-    "Mirvetuximab Soravtansine",
-    "Sofetabart Mipitecan"
-   ],
-   "targets": [
-    "FR-alpha"
-   ],
-   "cancer_types": [
-    "Carcinoma",
-    "Ovarian cancer",
-    "Primary fallopian tube serous carcinoma"
-   ]
-  },
-  {
    "nct_id": "NCT07218380",
+   "reason": "no_adc_vocabulary",
    "drugs": [
     "Enfortumab Vedotin",
     "Pembrolizumab",
@@ -741,107 +282,8 @@
    ]
   },
   {
-   "nct_id": "NCT07229313",
-   "drugs": [
-    "KIVU-107"
-   ],
-   "targets": [
-    "PTK7"
-   ],
-   "cancer_types": [
-    "Solid tumour"
-   ]
-  },
-  {
-   "nct_id": "NCT07238075",
-   "drugs": [
-    "ADCX-020"
-   ],
-   "targets": [
-    "unknown target"
-   ],
-   "cancer_types": [
-    "Cancer",
-    "Solid tumour"
-   ]
-  },
-  {
-   "nct_id": "NCT07258407",
-   "drugs": [
-    "TD001"
-   ],
-   "targets": [
-    "PSMA"
-   ],
-   "cancer_types": [
-    "Castrate-resistant prostate cancer",
-    "Prostate cancer"
-   ]
-  },
-  {
-   "nct_id": "NCT07263594",
-   "drugs": [
-    "DB-1324"
-   ],
-   "targets": [
-    "CDH17"
-   ],
-   "cancer_types": [
-    "Gastrointestinal cancer"
-   ]
-  },
-  {
-   "nct_id": "NCT07277270",
-   "drugs": [
-    "GSK5764227"
-   ],
-   "targets": [
-    "B7H3"
-   ],
-   "cancer_types": [
-    "Colorectal adenocarcinoma",
-    "Prostate cancer"
-   ]
-  },
-  {
-   "nct_id": "NCT07278336",
-   "drugs": [
-    "ABBV-901",
-    "Bevacizumab"
-   ],
-   "targets": [
-    "FR-alpha"
-   ],
-   "cancer_types": [
-    "Ovarian cancer"
-   ]
-  },
-  {
-   "nct_id": "NCT07286266",
-   "drugs": [
-    "Mocertatug Rezetecan"
-   ],
-   "targets": [
-    "B7H4"
-   ],
-   "cancer_types": [
-    "Ovarian cancer"
-   ]
-  },
-  {
-   "nct_id": "NCT07286331",
-   "drugs": [
-    "Mocertatug Rezetecan"
-   ],
-   "targets": [
-    "B7H4"
-   ],
-   "cancer_types": [
-    "Cancer"
-   ]
-  },
-  {
    "nct_id": "NCT07288177",
+   "reason": "no_adc_vocabulary",
    "drugs": [
     "Rinatabart sesutecan"
    ],
@@ -853,31 +295,8 @@
    ]
   },
   {
-   "nct_id": "NCT07300943",
-   "drugs": [
-    "CLIO-8221"
-   ],
-   "targets": [
-    "ERBB2"
-   ],
-   "cancer_types": [
-    "Solid tumour"
-   ]
-  },
-  {
-   "nct_id": "NCT07414836",
-   "drugs": [
-    "BG-C0979"
-   ],
-   "targets": [
-    "ADAM9"
-   ],
-   "cancer_types": [
-    "Solid tumour"
-   ]
-  },
-  {
    "nct_id": "NCT07465172",
+   "reason": "never_retrieved",
    "drugs": [
     "Trastuzumab Deruxtecan"
    ],
@@ -889,19 +308,8 @@
    ]
   },
   {
-   "nct_id": "NCT07473726",
-   "drugs": [
-    "HLX48"
-   ],
-   "targets": [
-    "EGFR/cMET*"
-   ],
-   "cancer_types": [
-    "Solid tumour"
-   ]
-  },
-  {
    "nct_id": "NCT07524348",
+   "reason": "no_adc_vocabulary",
    "drugs": [
     "SBE303"
    ],
@@ -911,192 +319,19 @@
    "cancer_types": [
     "Solid tumour"
    ]
-  },
-  {
-   "nct_id": "NCT07545122",
-   "drugs": [
-    "CT-202"
-   ],
-   "targets": [
-    "NECTIN4"
-   ],
-   "cancer_types": [
-    "Colorectal cancer",
-    "Triple-negative breast cancer",
-    "Urothelial carcinoma"
-   ]
-  },
-  {
-   "nct_id": "NCT07545356",
-   "drugs": [
-    "KIVU-305"
-   ],
-   "targets": [
-    "CEACAM5"
-   ],
-   "cancer_types": [
-    "Solid tumour"
-   ]
-  },
-  {
-   "nct_id": "NCT07549412",
-   "drugs": [
-    "Bevacizumab",
-    "Precemtabart Tocentecan",
-    "Trifluridine/Tipiracil"
-   ],
-   "targets": [
-    "CEACAM5"
-   ],
-   "cancer_types": [
-    "Colorectal cancer"
-   ]
-  },
-  {
-   "nct_id": "NCT07622524",
-   "drugs": [
-    "CS5007"
-   ],
-   "targets": [
-    "EGFR/ERBB3*"
-   ],
-   "cancer_types": [
-    "Solid tumour"
-   ]
-  },
-  {
-   "nct_id": "NCT07670312",
-   "drugs": [
-    "XYA02"
-   ],
-   "targets": [
-    "MUC1"
-   ],
-   "cancer_types": [
-    "Colorectal cancer",
-    "Gastroesophageal junction adenocarcinoma",
-    "Non-small cell lung cancer",
-    "Ovarian cancer",
-    "Pancreatic adenocarcinoma",
-    "Solid tumour"
-   ]
-  },
-  {
-   "nct_id": "NCT07686068",
-   "drugs": [
-    "VBC106"
-   ],
-   "targets": [
-    "FR-alpha/MSLN*"
-   ],
-   "cancer_types": [
-    "Cancer",
-    "Solid tumour"
-   ]
-  },
-  {
-   "nct_id": "NCT07686445",
-   "drugs": [
-    "AN4035"
-   ],
-   "targets": [
-    "CEACAM5"
-   ],
-   "cancer_types": [
-    "Solid tumour"
-   ]
-  },
-  {
-   "nct_id": "NCT07694765",
-   "drugs": [
-    "LM-364"
-   ],
-   "targets": [
-    "NECTIN4"
-   ],
-   "cancer_types": [
-    "Cancer"
-   ]
-  },
-  {
-   "nct_id": "NCT07700160",
-   "drugs": [
-    "VBC108"
-   ],
-   "targets": [
-    "CLDN18.2/CDH17*"
-   ],
-   "cancer_types": [
-    "Solid tumour"
-   ]
-  },
-  {
-   "nct_id": "NCT07707895",
-   "drugs": [
-    "Obrixtamig",
-    "ZL-1310"
-   ],
-   "targets": [
-    "DLL3"
-   ],
-   "cancer_types": [
-    "Extra-pulmonary neuroendocrine carcinoma",
-    "Lung cancer",
-    "Small-cell lung cancer"
-   ]
-  },
-  {
-   "nct_id": "NCT07718737",
-   "drugs": [
-    "AMT-116"
-   ],
-   "targets": [
-    "CD44v9"
-   ],
-   "cancer_types": [
-    "Non-small cell lung cancer"
-   ]
   }
  ],
  "candidate_drugs": [
   {
-   "name": "Pumitamig",
-   "n": 5
-  },
-  {
-   "name": "Mocertatug Rezetecan",
-   "n": 4
-  },
-  {
    "name": "Trastuzumab Pamirtecan",
    "n": 3
-  },
-  {
-   "name": "DB-1311",
-   "n": 3
-  },
-  {
-   "name": "GSK5764227",
-   "n": 3
-  },
-  {
-   "name": "Bevacizumab",
-   "n": 3
-  },
-  {
-   "name": "AMT-116",
-   "n": 2
-  },
-  {
-   "name": "LY4170156",
-   "n": 2
   },
   {
    "name": "Trastuzumab Deruxtecan",
    "n": 2
   },
   {
-   "name": "BNT326",
+   "name": "Pumitamig",
    "n": 2
   },
   {
@@ -1112,27 +347,7 @@
    "n": 1
   },
   {
-   "name": "CS5001",
-   "n": 1
-  },
-  {
-   "name": "IBI354",
-   "n": 1
-  },
-  {
-   "name": "MHB036C",
-   "n": 1
-  },
-  {
-   "name": "MHB088C",
-   "n": 1
-  },
-  {
    "name": "ATG 022",
-   "n": 1
-  },
-  {
-   "name": "Torvutatug Samrotecan",
    "n": 1
   },
   {
@@ -1140,63 +355,11 @@
    "n": 1
   },
   {
-   "name": "AMT-253",
-   "n": 1
-  },
-  {
-   "name": "IBI130",
-   "n": 1
-  },
-  {
-   "name": "AMT-562",
-   "n": 1
-  },
-  {
-   "name": "CUSP06",
-   "n": 1
-  },
-  {
    "name": "Vobramitamab Tavatecan",
    "n": 1
   },
   {
-   "name": "IBI3001",
-   "n": 1
-  },
-  {
-   "name": "YL211",
-   "n": 1
-  },
-  {
    "name": "AMT-676",
-   "n": 1
-  },
-  {
-   "name": "Trastuzumab",
-   "n": 1
-  },
-  {
-   "name": "Zanidatamab",
-   "n": 1
-  },
-  {
-   "name": "LY4052031",
-   "n": 1
-  },
-  {
-   "name": "DM001",
-   "n": 1
-  },
-  {
-   "name": "DM005",
-   "n": 1
-  },
-  {
-   "name": "BG-C477",
-   "n": 1
-  },
-  {
-   "name": "IBI3009",
    "n": 1
   },
   {
@@ -1212,39 +375,7 @@
    "n": 1
   },
   {
-   "name": "AK138D1",
-   "n": 1
-  },
-  {
-   "name": "DM002",
-   "n": 1
-  },
-  {
-   "name": "AK146D1",
-   "n": 1
-  },
-  {
-   "name": "Sacituzumab Drozuntecan",
-   "n": 1
-  },
-  {
-   "name": "ENV-501",
-   "n": 1
-  },
-  {
-   "name": "SBO-154",
-   "n": 1
-  },
-  {
-   "name": "Topotecan",
-   "n": 1
-  },
-  {
-   "name": "LM-350",
-   "n": 1
-  },
-  {
-   "name": "Docetaxel",
+   "name": "DB-1311",
    "n": 1
   },
   {
@@ -1252,27 +383,7 @@
    "n": 1
   },
   {
-   "name": "BNT3212",
-   "n": 1
-  },
-  {
    "name": "SHR-4849",
-   "n": 1
-  },
-  {
-   "name": "BG-C0902",
-   "n": 1
-  },
-  {
-   "name": "YL242",
-   "n": 1
-  },
-  {
-   "name": "Mirvetuximab Soravtansine",
-   "n": 1
-  },
-  {
-   "name": "Sofetabart Mipitecan",
    "n": 1
   },
   {
@@ -1280,99 +391,7 @@
    "n": 1
   },
   {
-   "name": "Pembrolizumab",
-   "n": 1
-  },
-  {
-   "name": "Placebo",
-   "n": 1
-  },
-  {
-   "name": "Vepugratinib",
-   "n": 1
-  },
-  {
-   "name": "KIVU-107",
-   "n": 1
-  },
-  {
-   "name": "ADCX-020",
-   "n": 1
-  },
-  {
-   "name": "TD001",
-   "n": 1
-  },
-  {
-   "name": "DB-1324",
-   "n": 1
-  },
-  {
-   "name": "ABBV-901",
-   "n": 1
-  },
-  {
-   "name": "CLIO-8221",
-   "n": 1
-  },
-  {
-   "name": "BG-C0979",
-   "n": 1
-  },
-  {
-   "name": "HLX48",
-   "n": 1
-  },
-  {
    "name": "SBE303",
-   "n": 1
-  },
-  {
-   "name": "CT-202",
-   "n": 1
-  },
-  {
-   "name": "KIVU-305",
-   "n": 1
-  },
-  {
-   "name": "Precemtabart Tocentecan",
-   "n": 1
-  },
-  {
-   "name": "Trifluridine/Tipiracil",
-   "n": 1
-  },
-  {
-   "name": "CS5007",
-   "n": 1
-  },
-  {
-   "name": "XYA02",
-   "n": 1
-  },
-  {
-   "name": "VBC106",
-   "n": 1
-  },
-  {
-   "name": "AN4035",
-   "n": 1
-  },
-  {
-   "name": "LM-364",
-   "n": 1
-  },
-  {
-   "name": "VBC108",
-   "n": 1
-  },
-  {
-   "name": "Obrixtamig",
-   "n": 1
-  },
-  {
-   "name": "ZL-1310",
    "n": 1
   }
  ]
