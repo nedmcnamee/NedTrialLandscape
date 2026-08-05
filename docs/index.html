@@ -644,14 +644,10 @@ Promise.all([
   $('subtitle').textContent=d.site.subtitle;
   $('attrib').textContent=d.site.attribution;
   $('gen').textContent=d.generated;
-
+  
   const adc=d.trials.filter(isAdc);
   const nNew=adc.filter(isNew).length;
-  const nSeen=d.counts.first_seen_this_week;
-  const note = (nSeen!=null && nSeen>nNew)
-    ? `${nSeen} first appeared in the dataset this week; the rest were registered earlier and only just detected.`
-    : 'Newly registered, not newly detected.';
-  [['New ADC trials this week',nNew,true,note],
+  [['New ADC trials this week',nNew,true,null],
    ['ARTiCANZ ADC trials',adc.filter(t=>t.registry===ARTI).length,false,null],
    ['ClinicalTrials.gov ADC trials',adc.filter(t=>t.registry===CTG).length,false,null],
   ].forEach(([k,v,hl,nt])=>{
