@@ -221,3 +221,42 @@ DRUG_STOPLIST = {
     # not a drug
     "placebo", "best supportive care", "standard of care",
 }
+
+# ============================================================================
+# ADD THIS to the END of src/articanz.py (after adc_drug_names and the
+# DRUG_STOPLIST block). Nothing else in that file changes.
+# ============================================================================
+
+
+def adc_target_map(records: list[dict]) -> dict[str, str]:
+    """Drug name -> ADC target, learned from ARTiCANZ's curated annotations.
+
+    Companion to adc_drug_names(). That function tells ClinicalTrials.gov
+    *which trials* are ADC trials; this one tells it *what they target*, so a
+    study titled only "A Study of DM005 in Patients With Advanced Solid
+    Tumors" resolves to EGFR/cMET instead of Other/unknown. No amount of
+    regex on that title could have worked -- the antigen simply is not in the
+    text. ARTiCANZ knows because a specialist annotated it.
+
+    Two guards keep the mapping trustworthy:
+
+      * Only trials carrying exactly ONE ADC target contribute. A study of
+        two conjugates cannot tell us which drug hits which antigen.
+      * A name claimed by more than one target is dropped rather than
+        guessed at.
+
+    Restricted to adc_drug_names() output, so comparators and backbone
+    chemotherapy never enter the mapping.
+    """
+    allowed = set(adc_drug_names(records))
+    claims: dict[str, set[str]] = {}
+    for r in records:
+        targets = {c["t"] for c in r["classes"] if c["m"] == ADC}
+        if len(targets) != 1:
+            continue
+        target = next(iter(targets))
+        for d in r["drugs"]:
+            name = d.strip()
+            if name in allowed:
+                claims.setdefault(name, set()).add(target)
+    return {n: next(iter(t)) for n, t in claims.items() if len(t) == 1}

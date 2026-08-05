@@ -134,7 +134,9 @@ def main() -> int:
     if cfg["sources"]["ctgov"]["enabled"]:
         print("ClinicalTrials.gov")
         harvested = articanz.adc_drug_names(art) if art else []
-        ctg, drops = ctgov.build(cfg["sources"]["ctgov"], extra_drugs=harvested)
+        tmap = articanz.adc_target_map(art) if art else {}
+        ctg, drops = ctgov.build(cfg["sources"]["ctgov"],
+                                 extra_drugs=harvested, target_map=tmap)
         records += ctg
 
     for r in records:

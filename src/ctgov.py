@@ -1,27 +1,32 @@
 """ClinicalTrials.gov API v2 ingest.
 
-Port of the ADC registry analysis v9 R pipeline, with three additions driven
-by the cross-registry recall audit (see src/recall.py):
+Port of the ADC registry analysis v9 R pipeline, extended so the global set
+stays comparable with, and learns from, ARTiCANZ:
 
   1. DROP REASONS. Every candidate that does not survive is recorded with the
-     filter that removed it. Without this, a missed trial is indistinguishable
-     from a deliberately excluded one, and the recall figure conflates a
-     pattern gap with a policy choice.
+     filter that removed it, so recall.py can separate a pattern gap from a
+     deliberate scope choice.
 
   2. HARVESTED DRUG NAMES. ARTiCANZ's curators name the ADCs; we inherit that
-     list weekly rather than hand-maintaining ~90 company codes. See
-     articanz.adc_drug_names().
+     list weekly instead of hand-maintaining ~90 company codes.
 
-  3. GENERIC INN SUFFIX FAMILIES. ADC names are systematic (<stem>-<payload>),
+  3. HARVESTED TARGETS. ARTiCANZ also knows what each agent hits. A title
+     like "A Study of DM005 in Patients With Advanced Solid Tumors" contains
+     no antigen at all -- no regex can rescue it -- but ARTiCANZ says
+     EGFR/cMET, so we use that.
+
+  4. CANONICAL TARGET NAMES. The v9 rules said HER2, TROP-2, FRa, c-MET;
+     ARTiCANZ says ERBB2, Trop2, FR-alpha, cMET. Left alone, the same antigen
+     renders as two separate columns and the registries can never be compared
+     on one axis. Everything is normalised to ARTiCANZ's vocabulary.
+
+  5. GENERIC INN SUFFIX FAMILIES. ADC names are systematic (<stem>-<payload>),
      so matching the payload family catches agents nobody has listed yet.
 
 Two deliberate deviations from v9, both bug fixes:
   * v9's HAEM_PATTERN is case-insensitive and contains \\bALL\\b, so it matches
     the ordinary English word "all". Acronyms are matched case-sensitively here.
   * v9's END_DATE was "2026-04-31", not a real date. Uses today instead.
-
-Not ported (batch research steps): the per-antigen recall audit, LLM pattern
-drafting, and the n=50 boundary validation sample.
 """
 from __future__ import annotations
 
@@ -35,7 +40,7 @@ BASE = "https://clinicaltrials.gov/api/v2/studies"
 PAGE_SIZE = 1000
 PAUSE = 0.4
 TIMEOUT = 120
-QUERY_CHUNK = 40          # drug names per query; keeps the URL a sane length
+QUERY_CHUNK = 40
 
 ADC_DRUGS = [
     "trastuzumab deruxtecan", "trastuzumab emtansine", "sacituzumab govitecan",
@@ -54,15 +59,8 @@ CONCEPT_QUERY = '"antibody-drug conjugate" OR "ADC" OR conjugate'
 
 I = re.IGNORECASE
 
-# Free (unconjugated) camptothecins share the -tecan ending with conjugated
-# payloads and appear as comparator arms, so they must not trigger the
-# generic suffix rule.
 FREE_CAMPTOTHECIN = (r"irinotecan|topotecan|exatecan|belotecan|rubitecan"
                      r"|gimatecan|silatecan|camptothecin")
-
-# <stem>-<payload> naming: -tecan (topoisomerase-I), -dotin (auristatin),
-# -tansine (maytansinoid). Matching the family means a new agent is caught
-# the first week it is registered, without anyone updating a list.
 GENERIC_INN = (
     rf"\b(?!(?:{FREE_CAMPTOTHECIN})\b)\w{{2,}}tecan\b"
     r"|\b\w{2,}dotin\b"
@@ -105,7 +103,6 @@ HAEM_WORDS = re.compile("|".join([
     "polatuzumab", "inotuzumab", "gemtuzumab", "loncastuximab",
     "camidanlumab", "coltuximab", "pinatuzumab",
 ]), I)
-# case-SENSITIVE: \bALL\b under IGNORECASE matches the word "all" (v9 bug)
 HAEM_ACRONYMS = re.compile(r"\bAML\b|\bALL\b|\bCLL\b|\bCML\b|\bMDS\b|\bMPN\b|\bAL amyloid")
 
 
@@ -113,34 +110,79 @@ def is_haem(txt: str) -> bool:
     return bool(HAEM_WORDS.search(txt) or HAEM_ACRONYMS.search(txt))
 
 
+# ---- target assignment ------------------------------------------------------
+
+# v9 named antigens its own way; ARTiCANZ names them differently. Since both
+# feed one heatmap axis, normalise to the curated vocabulary. Without this,
+# HER2 and ERBB2 sit in separate columns and no registry comparison is valid.
+CANONICAL = {
+    "HER2": "ERBB2", "HER3": "ERBB3", "TROP-2": "Trop2", "FRa": "FR-alpha",
+    "Nectin-4": "NECTIN4", "c-MET": "cMET", "B7-H3": "B7H3", "B7-H4": "B7H4",
+    "LIV-1": "LIV1", "TAG-72": "TAG72", "5T4": "5T4",
+}
+
 TARGET_RULES = [
-    ("TROP-2",   r"sacituzumab|datopotamab|TROP.?2|TACSTD2|\bSKB264\b|sac.tmt"),
-    ("HER2",     r"trastuzumab|\bHER2\b|ERBB2|disitamab|\bBL-M07D1\b|\bSHR-A1811\b|\bZW49\b"),
-    ("Nectin-4", r"enfortumab|Nectin.?4|NECTIN4"),
-    ("FRa",      r"mirvetuximab|folate receptor|FR.alpha|FOLR1"),
-    ("HER3",     r"patritumab|\bHER3\b|ERBB3"),
-    ("c-MET",    r"telisotuzumab|c-MET|cMET|\bMET\b|adizutecan|\bHS-20117\b"),
+    ("Trop2",    r"sacituzumab|datopotamab|TROP.?2|TACSTD2|\bSKB264\b|sac.tmt"),
+    ("ERBB2",    r"trastuzumab|\bHER2\b|ERBB2|disitamab|\bRC48\b"
+                 r"|\bBL-M07D1\b|\bSHR-A1811\b|\bZW49\b"),
+    ("NECTIN4",  r"enfortumab|Nectin.?4|NECTIN4"),
+    ("FR-alpha", r"mirvetuximab|folate receptor|FR.alpha|FOLR1"),
+    ("ERBB3",    r"patritumab|\bHER3\b|ERBB3"),
+    # antigens stated in the title of otherwise anonymous studies
+    ("CD205",    r"\bCD205\b|\bLY75\b|\bOBT076\b"),
+    ("TF",       r"tissue factor|\bADCE-T02\b|tisotumab"),
+    ("KIT",      r"c.?Kit\b|\bNN3201\b"),
+    ("FGFR2b",   r"\bFGFR2b\b|fibroblast growth factor receptor 2b|\bBG-C137\b"),
+    ("DLK1",     r"\bDLK1\b|\bADCT-701\b"),
+    ("ROR2",     r"\bROR2\b|\bBA3021\b"),
+    ("EphA5",    r"\bEphA5\b|\bMBRC-101\b"),
+    ("CDH6",     r"\bCDH6\b|cadherin.6|raludotatug|\bR-DXd\b"),
+    ("cMET",     r"telisotuzumab|c-MET|cMET|\bMET\b|adizutecan|\bHS-20117\b|\bBYON3521\b"),
     ("EGFR",     r"becotatug|\bMRG003\b|EGFR.{0,20}(ADC|conjugate)|anti.EGFR.{0,20}(ADC|conjugate)"),
     ("ROR1",     r"zilovertamab|\bROR1\b"),
-    ("B7-H3",    r"ifinatamab|\bB7.H3\b|CD276|\bSYS6043\b|\bMHB088C\b"),
-    ("B7-H4",    r"\bB7.H4\b|VTCN1|GSK5733584|AZD8205|SGN.B7H4|HS-20089|LNCB74|BG-C9074|puxitatug"),
+    ("B7H3",     r"ifinatamab|\bB7.H3\b|CD276|\bSYS6043\b|\bMHB088C\b"),
+    ("B7H4",     r"\bB7.H4\b|VTCN1|GSK5733584|AZD8205|SGN.B7H4|HS-20089|LNCB74|BG-C9074|puxitatug"),
     ("CLDN18.2", r"\bCLDN18\.2\b|claudin.18|\bLM-302\b|\bCMG901\b"),
     ("5T4",      r"\b5T4\b|TBCA4|WAIF1|SYD1875"),
     ("DLL3",     r"\bDLL3\b|rovalpituzumab|SC16|BI 764532"),
     ("MSLN",     r"\bMSLN\b|mesothelin|anetumab"),
     ("CEACAM5",  r"\bCEACAM5\b|tusamitamab|\bIBI343\b"),
     ("PTK7",     r"\bPTK7\b|cofetuzumab"),
-    ("LIV-1",    r"LIV.1|SLC39A6|ladiratuzumab"),
+    ("LIV1",     r"LIV.1|SLC39A6|ladiratuzumab"),
     ("GPC3",     r"\bGPC3\b|glypican"),
     ("MUC16",    r"\bMUC16\b|CA125.ADC|sofituzumab"),
     ("MUC1",     r"\bMUC1\b|mucin.?1\b"),
     ("PSMA",     r"\bPSMA\b|prostate.specific membrane"),
-    ("TAG-72",   r"\bTAG.72\b|CC49"),
+    ("TAG72",    r"\bTAG.72\b|CC49"),
     ("EGFRvIII", r"\bEGFRvIII\b|depatux"),
     ("CLDN6",    r"\bCLDN6\b|claudin.6|\bBGB-B455\b"),
     ("CD166",    r"\bCD166\b|\bALCAM\b|\bCX-2009\b"),
 ]
 TARGET_RULES = [(n, re.compile(p, I)) for n, p in TARGET_RULES]
+
+
+def build_matchers(target_map: dict[str, str] | None):
+    """Compile harvested drug names into word-bounded patterns.
+
+    Longest first, so "AMT-1160" can never be shadowed by "AMT-116". The
+    lookarounds stop a code matching inside a longer token.
+    """
+    if not target_map:
+        return []
+    items = sorted(target_map.items(), key=lambda kv: -len(kv[0]))
+    return [(re.compile(r"(?<![A-Za-z0-9])" + re.escape(n) + r"(?![A-Za-z0-9])", I), t)
+            for n, t in items]
+
+
+def assign_target(text: str, matchers=()) -> str:
+    # A curated ARTiCANZ annotation beats our own text matching.
+    for pat, tgt in matchers:
+        if pat.search(text):
+            return CANONICAL.get(tgt, tgt)
+    for name, pat in TARGET_RULES:
+        if pat.search(text):
+            return CANONICAL.get(name, name)
+    return "Other/unknown"
 
 
 def _advanced(cfg) -> str:
@@ -202,24 +244,16 @@ def _parse(s: dict) -> dict:
     }
 
 
-def assign_target(text: str) -> str:
-    for name, pat in TARGET_RULES:
-        if pat.search(text):
-            return name
-    return "Other/unknown"
-
-
-def build(cfg, extra_drugs=(), log=print):
+def build(cfg, extra_drugs=(), target_map=None, log=print):
     """Returns (records, drops). drops maps nct_id -> reason it was excluded."""
     adv = _advanced(cfg)
 
-    # Harvested names go into BOTH the search query (so the record is
-    # retrieved) and the confirmation pattern (so it survives the filter).
-    # Doing only one of the two achieves nothing.
     extra = sorted({d for d in extra_drugs if d})
     confirm = re.compile(
         CONFIRM_BASE + ("|" + "|".join(re.escape(d) for d in extra) if extra else ""), I)
-    log(f"  {len(extra)} drug names harvested from ARTiCANZ")
+    matchers = build_matchers(target_map)
+    log(f"  {len(extra)} drug names and {len(matchers)} target mappings "
+        f"harvested from ARTiCANZ")
 
     raw = []
     terms = ADC_DRUGS + extra
@@ -271,9 +305,11 @@ def build(cfg, extra_drugs=(), log=print):
 
     log(f"  {len(keep)} confirmed ADC trials ({len(drops)} dropped)")
 
-    out = []
+    out, unknown = [], 0
     for d in keep:
-        tgt = assign_target(f"{d['interventions']} {d['brief_title']}")
+        tgt = assign_target(f"{d['interventions']} {d['brief_title']}", matchers)
+        if tgt == "Other/unknown":
+            unknown += 1
         out.append({
             "registry": "ClinicalTrials.gov",
             "trial_id": d["nct_id"],
@@ -293,4 +329,6 @@ def build(cfg, extra_drugs=(), log=print):
             "combination": d["n_drug_interventions"] > 1,
             "url": f"https://clinicaltrials.gov/study/{d['nct_id']}",
         })
+    log(f"  {unknown} still Other/unknown "
+        f"({100 * unknown / max(len(out), 1):.0f}%)")
     return out, drops
