@@ -10,7 +10,7 @@
   --line:rgba(11,11,11,.10); --empty:#efeee9; --accent:#185fa5;
   --c1:#e6f1fb; --c2:#b5d4f4; --c3:#85b7eb; --c4:#378add; --c5:#185fa5; --c6:#0c447c;
   --warn:#a32d2d;
-  --hh:24px; --cell:20px; --gap:2px;
+  --hh:24px; --cell:20px; --gap:2px; --chart:170px;
 }
 @media (prefers-color-scheme:dark){
   :root{--bg:#1a1a19;--card:#232322;--ink:#fff;--ink2:#c3c2b7;--ink3:#898781;
@@ -25,9 +25,10 @@ h2{font-size:16px;font-weight:500;margin:0 0 10px}
 .sub{color:var(--ink2);margin:0 0 14px}
 .stats{display:flex;gap:10px;flex-wrap:wrap;margin:16px 0 16px}
 .stat{background:var(--card);border:.5px solid var(--line);border-radius:10px;
-      padding:10px 16px;min-width:150px}
+      padding:10px 16px;min-width:150px;max-width:250px}
 .stat .k{font-size:12px;color:var(--ink3)}
 .stat .v{font-size:24px;font-weight:500}
+.stat .note{font-size:11px;color:var(--ink3);line-height:1.35;margin-top:2px}
 .stat.new .v{color:var(--accent)}
 .tabs{display:flex;gap:4px;margin:0 0 14px;flex-wrap:wrap}
 .tabs button{border-radius:8px;padding:6px 14px;font-size:13px}
@@ -87,10 +88,21 @@ td.tid a{color:var(--accent);text-decoration:none;white-space:nowrap}
 .scale i{width:26px;height:12px;border-radius:2px;display:block}
 .scale span{font-size:10px;font-variant-numeric:tabular-nums;display:block;
             margin-top:2px;color:var(--ink3)}
-.bars{display:flex;align-items:flex-end;gap:3px;height:150px;margin:6px 0 4px}
+/* charts */
+.chart{display:flex;gap:6px;align-items:stretch;margin-top:10px}
+.ytitle{writing-mode:vertical-rl;transform:rotate(180deg);font-size:11px;
+        color:var(--ink3);height:var(--chart);display:flex;align-items:center;
+        justify-content:center}
+.yaxis{width:34px;height:var(--chart);display:flex;flex-direction:column;
+       justify-content:space-between;align-items:flex-end;font-size:10px;
+       color:var(--ink3);font-variant-numeric:tabular-nums;padding-right:4px;
+       border-right:.5px solid var(--line)}
+.plot{flex:1;min-width:0}
+.bars{display:flex;align-items:flex-end;gap:3px;height:var(--chart)}
 .bars div{flex:1;min-width:6px;background:var(--c4);border-radius:2px 2px 0 0}
 .bars div:hover{background:var(--c6)}
-.blabels{display:flex;gap:3px;font-size:10px;color:var(--ink3)}
+.bars div.seed{background:var(--ink3);opacity:.5}
+.blabels{display:flex;gap:3px;font-size:10px;color:var(--ink3);margin-top:4px}
 .blabels span{flex:1;min-width:6px;text-align:center;overflow:hidden}
 .warn{color:var(--warn)}
 footer{margin-top:32px;padding-top:14px;border-top:.5px solid var(--line);
@@ -125,8 +137,11 @@ button{font:inherit;padding:5px 10px;border-radius:6px;border:.5px solid var(--l
       agents, generic INN payload suffixes (<code>-tecan</code>,
       <code>-dotin</code>, <code>-tansine</code>, excluding free camptothecins
       such as irinotecan), and drug names harvested weekly from ARTiCANZ itself.
-      The Coverage tab reports how well that is working, measured against
-      ARTiCANZ's curated calls.</p>
+      The Coverage tab reports how well that is working.</p>
+      <p><b>What "new this week" means.</b> A trial newly registered, not a
+      trial we newly noticed. Widening the classifier surfaces studies that
+      were registered years ago; those are excluded, as is everything carried
+      in by the initial seed build.</p>
       <p><b>Reading the totals.</b> Every number counts <i>distinct trials</i>.
       Margins deliberately do not sum to the grand total: a trial testing two
       targets, or enrolling several cancer types, legitimately occupies more
@@ -174,7 +189,6 @@ button{font:inherit;padding:5px 10px;border-radius:6px;border:.5px solid var(--l
     </div>
   </div>
 
-  <!-- Landscape -->
   <div id="view-landscape">
     <div class="panel">
       <div id="hm-cap" class="row" style="margin-bottom:10px"></div>
@@ -197,26 +211,33 @@ button{font:inherit;padding:5px 10px;border-radius:6px;border:.5px solid var(--l
     </div>
   </div>
 
-  <!-- Growth -->
   <div id="view-growth" class="hidden">
     <div class="panel">
       <h2>ADC trials first posted to ClinicalTrials.gov, by year</h2>
       <p class="muted" style="margin-top:-4px" id="growth-note"></p>
-      <div class="bars" id="bars-year"></div>
-      <div class="blabels" id="lab-year"></div>
+      <div class="chart">
+        <div class="ytitle">Trials registered</div>
+        <div class="yaxis" id="y-year"></div>
+        <div class="plot"><div class="bars" id="bars-year"></div>
+             <div class="blabels" id="lab-year"></div></div>
+      </div>
     </div>
     <div class="panel">
       <h2>Trials first seen by this tracker, by month</h2>
       <p class="muted" style="margin-top:-4px">
-        When a trial entered this dataset, not when it opened. The first bar is
-        the initial seed; the series only becomes meaningful from the first
-        weekly refresh onwards.</p>
-      <div class="bars" id="bars-seen"></div>
-      <div class="blabels" id="lab-seen"></div>
+        When a trial entered this dataset, not when it opened. The grey bar is
+        the initial seed build, which stamped every trial then known with one
+        date; a spike in any later month usually means the classifier was
+        widened rather than that many trials opened at once.</p>
+      <div class="chart">
+        <div class="ytitle">Trials added</div>
+        <div class="yaxis" id="y-seen"></div>
+        <div class="plot"><div class="bars" id="bars-seen"></div>
+             <div class="blabels" id="lab-seen"></div></div>
+      </div>
     </div>
   </div>
 
-  <!-- Coverage -->
   <div id="view-coverage" class="hidden">
     <div class="panel">
       <h2>How complete is the global set?</h2>
@@ -254,6 +275,9 @@ const uniq=a=>[...new Set(a)].sort();
 const el=(t,c,x)=>{const e=document.createElement(t); if(c)e.className=c;
   if(x!==undefined)e.textContent=x; return e;};
 const isAdc=t=>t.classes.some(c=>c.m===ADC);
+// build.py decides what counts as new; the page must not second-guess it,
+// or the badge and the headline number will disagree.
+const isNew=t=>t.is_new===true;
 const hrow=cells=>{const tr=el('tr'); cells.forEach(c=>{const th=el('th',null,c);
   th.style.cursor='default'; tr.appendChild(th);}); return tr;};
 const trow=cells=>{const tr=el('tr'); cells.forEach(c=>tr.appendChild(el('td','muted',c)));
@@ -265,9 +289,6 @@ function fillSelect(id,vals,allLabel){
   vals.forEach(v=>s.appendChild(new Option(v,v)));
 }
 
-/* ---- URL state -----------------------------------------------------------
-   Filters live in the query string so a view can be sent to someone rather
-   than screenshotted. replaceState keeps the back button usable. */
 const FIELDS=[['reg','f-reg'],['mod','f-mod'],['intent','f-intent'],
   ['phase','f-phase'],['state','f-state'],['group','f-group'],
   ['min','f-min'],['max','f-max'],['q','f-q']];
@@ -285,12 +306,9 @@ function readState(){
   if(!p.toString()) return;
   FIELDS.forEach(([k,id])=>{if(p.has(k)) $(id).value=p.get(k);});
   FLAGS.forEach(([k,id])=>{$(id).checked=p.get(k)==='1';});
-  // tolerate links to the retired access-gap view
   if(p.has('view') && VIEWS.includes(p.get('view'))) VIEW=p.get('view');
 }
 
-// ClinicalTrials.gov is fetched as an ADC-only set, so the modality selector
-// is meaningless there. Lock it to ADC unless we are looking at ARTiCANZ.
 function syncModality(){
   const artOnly=$('f-reg').value===ARTI;
   $('f-mod').disabled=!artOnly;
@@ -299,10 +317,6 @@ function syncModality(){
     : 'ClinicalTrials.gov is collected as an ADC-only set, so modality is fixed.';
 }
 
-/* ---- colour scale --------------------------------------------------------
-   Counts span an order of magnitude between registries. A fixed 1..6 ramp
-   saturates at the third bin, so the scale is computed from the largest cell
-   on screen, and is logarithmic because the distribution is heavily skewed. */
 function makeScale(max){
   if(max<=6){
     const lo=[]; for(let i=1;i<=Math.max(max,1);i++) lo.push(i);
@@ -335,7 +349,7 @@ function filtered(){
         ph=$('f-phase').value, st=$('f-state').value, grp=$('f-group').value,
         q=$('f-q').value.trim().toLowerCase(),
         hideBasket=$('f-basket').checked, newOnly=$('f-newonly').checked,
-        activeOnly=$('f-active').checked, cutoff=DATA.cutoff;
+        activeOnly=$('f-active').checked;
   return DATA.trials.filter(t=>{
     if(mod && !t.modalities.includes(mod)) return false;
     if(reg && t.registry!==reg) return false;
@@ -344,7 +358,7 @@ function filtered(){
     if(st && !(t.states||[]).includes(st)) return false;
     if(grp && !t.tissue_groups.includes(grp)) return false;
     if(activeOnly && !t.active) return false;
-    if(newOnly && !(t.first_seen>cutoff)) return false;
+    if(newOnly && !isNew(t)) return false;
     if(q){
       const blob=[t.trial_id,t.title||'',(t.drugs||[]).join(' '),
                   t.cancer_types.join(' '),t.classes.map(c=>c.t).join(' ')]
@@ -360,13 +374,8 @@ function filtered(){
   }).filter(t=>t.rows.length);
 }
 
-// Panel and tissue names contain spaces and slashes, so the composite key
-// needs a separator that cannot occur in the data.
-const SEP='\u0001';
+const SEP='';
 
-// Every total counts DISTINCT trials via Sets. Summing cell values would
-// double-count a trial spanning two targets or two cancer types, which is
-// also why the margins do not add up to the grand total.
 function buildMatrix(rows){
   const mod=$('f-mod').value, minCol=+$('f-min').value, maxCol=+$('f-max').value;
   const cells={}, colSet={}, rowSet={}, panelSet={}, colPanel={};
@@ -406,8 +415,6 @@ function drawHeatmap(rows){
     $('scale').innerHTML=''; return; }
   const sc=makeScale(m.maxCell); drawScale(sc);
 
-  // Label column mirrors the panels exactly: heading, axis strip, rows,
-  // totals. Omitting the heading shifted every label up by one row.
   const labels=el('div','pnl');
   labels.appendChild(el('h3',null,' '));
   labels.appendChild(el('div','xl'));
@@ -493,7 +500,7 @@ function drawTable(rows){
     const tr=el('tr');
     const td0=el('td','tid');
     const a=el('a',null,t.trial_id); a.href=t.url; a.target='_blank'; td0.appendChild(a);
-    if(t.first_seen>DATA.cutoff) td0.appendChild(el('span','tag new','new'));
+    if(isNew(t)) td0.appendChild(el('span','tag new','new'));
     if(!t.active) td0.appendChild(el('span','tag off','closed'));
     tr.appendChild(td0);
     tr.appendChild(el('td',null,t.title||(t.drugs||[]).join(', ')));
@@ -517,14 +524,19 @@ function drawTable(rows){
 }
 
 /* ---- growth -------------------------------------------------------------- */
-function drawBars(barsId,labId,pairs){
-  const bars=$(barsId), labs=$(labId); bars.innerHTML=''; labs.innerHTML='';
-  if(!pairs.length){ bars.appendChild(el('div','muted','')); return; }
+function drawBars(barsId,labId,yId,pairs,seedKey){
+  const bars=$(barsId), labs=$(labId), y=$(yId);
+  bars.innerHTML=''; labs.innerHTML=''; y.innerHTML='';
+  if(!pairs.length){ y.appendChild(el('span',null,'0')); return; }
   const max=Math.max(1,...pairs.map(p=>p[1]));
+  // three ticks is enough to read a bar chart without gridlines
+  [max,Math.round(max/2),0].forEach(v=>y.appendChild(el('span',null,String(v))));
   pairs.forEach(([k,v])=>{
-    const d=el('div'); d.style.height=Math.max(2,100*v/max)+'%';
-    d.title=`${k}: ${v} trial${v>1?'s':''}`; bars.appendChild(d);
-    labs.appendChild(el('span',null,k));
+    const d=el('div',k===seedKey?'seed':null);
+    d.style.height=Math.max(2,100*v/max)+'%';
+    d.title=`${k===seedKey?'Initial seed':k}: ${v} trial${v>1?'s':''}`;
+    bars.appendChild(d);
+    labs.appendChild(el('span',null,k===seedKey?'seed':k));
   });
 }
 function drawGrowth(){
@@ -532,15 +544,22 @@ function drawGrowth(){
   const byYear={};
   adc.filter(t=>t.registry===CTG&&t.year).forEach(t=>{byYear[t.year]=(byYear[t.year]||0)+1;});
   const years=Object.keys(byYear).sort();
-  drawBars('bars-year','lab-year',years.map(y=>[y,byYear[y]]));
+  drawBars('bars-year','lab-year','y-year',years.map(y=>[y,byYear[y]]));
   $('growth-note').textContent = years.length
-    ? 'Registration year of every confirmed ADC trial in the global set. ARTiCANZ records carry no registration date, so they are not shown here.'
+    ? 'Registration year of every confirmed ADC trial in the global set. ARTiCANZ records carry no registration date, so they are not shown here. The final year is partial.'
     : 'No ClinicalTrials.gov trials in this build yet.';
 
-  const bySeen={};
-  adc.forEach(t=>{const m=(t.first_seen||'').slice(0,7); if(m) bySeen[m]=(bySeen[m]||0)+1;});
-  const months=Object.keys(bySeen).sort();
-  drawBars('bars-seen','lab-seen',months.map(m=>[m,bySeen[m]]));
+  // The seed build stamped everything with one date; show it as its own
+  // labelled bar rather than pretending that month saw a surge.
+  const seed=DATA.seed_date, seedMonth=seed?seed.slice(0,7):null;
+  const bySeen={}; let seedN=0;
+  adc.forEach(t=>{
+    if(seed && t.first_seen===seed){ seedN++; return; }
+    const m=(t.first_seen||'').slice(0,7); if(m) bySeen[m]=(bySeen[m]||0)+1;
+  });
+  const pairs=Object.keys(bySeen).sort().map(m=>[m,bySeen[m]]);
+  if(seedN) pairs.unshift(['__seed__',seedN]);
+  drawBars('bars-seen','lab-seen','y-seen',pairs,'__seed__');
 }
 
 /* ---- coverage ------------------------------------------------------------ */
@@ -551,8 +570,7 @@ function drawCoverage(){
     pol.appendChild(el('p','muted','Coverage report not available for this build.'));
     return;
   }
-  const pct = RECALL.recall_in_scope_pct!=null ? RECALL.recall_in_scope_pct
-            : RECALL.recall_pct;
+  const pct=RECALL.recall_in_scope_pct!=null?RECALL.recall_in_scope_pct:RECALL.recall_pct;
   const S=[['Recall'+(RECALL.recall_in_scope_pct!=null?' (in scope)':''),
             pct!=null?pct+'%':'—'],
            ['ARTiCANZ ADC trials',RECALL.articanz_adc],
@@ -588,7 +606,6 @@ function drawCoverage(){
   });
 }
 
-/* ---- view switching ------------------------------------------------------ */
 function setView(v){
   VIEW=VIEWS.includes(v)?v:'landscape';
   VIEWS.forEach(k=>$('view-'+k).classList.toggle('hidden',k!==VIEW));
@@ -623,20 +640,24 @@ Promise.all([
   fetch('recall.json').then(r=>r.ok?r.json():null).catch(()=>null)
 ]).then(([d,rc])=>{
   DATA=d; RECALL=rc;
-  const cut=new Date(d.generated); cut.setDate(cut.getDate()-8);
-  DATA.cutoff=cut.toISOString().slice(0,10);
 
   $('subtitle').textContent=d.site.subtitle;
   $('attrib').textContent=d.site.attribution;
   $('gen').textContent=d.generated;
 
   const adc=d.trials.filter(isAdc);
-  [['New ADC trials this week',adc.filter(t=>t.first_seen>DATA.cutoff).length,true],
-   ['ARTiCANZ ADC trials',adc.filter(t=>t.registry===ARTI).length,false],
-   ['ClinicalTrials.gov ADC trials',adc.filter(t=>t.registry===CTG).length,false],
-  ].forEach(([k,v,hl])=>{
+  const nNew=adc.filter(isNew).length;
+  const nSeen=d.counts.first_seen_this_week;
+  const note = (nSeen!=null && nSeen>nNew)
+    ? `${nSeen} first appeared in the dataset this week; the rest were registered earlier and only just detected.`
+    : 'Newly registered, not newly detected.';
+  [['New ADC trials this week',nNew,true,note],
+   ['ARTiCANZ ADC trials',adc.filter(t=>t.registry===ARTI).length,false,null],
+   ['ClinicalTrials.gov ADC trials',adc.filter(t=>t.registry===CTG).length,false,null],
+  ].forEach(([k,v,hl,nt])=>{
     const s=el('div','stat'+(hl?' new':''));
     s.appendChild(el('div','k',k)); s.appendChild(el('div','v',String(v)));
+    if(nt) s.appendChild(el('div','note',nt));
     $('stats').appendChild(s);
   });
 

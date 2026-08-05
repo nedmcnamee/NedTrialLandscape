@@ -289,6 +289,7 @@ def build(cfg, extra_drugs=(), log=print):
             "n_sites": 0,
             "sponsor": d["sponsor"],
             "year": int(d["first_post_date"][:4]) if d["first_post_date"][:4].isdigit() else None,
+            "first_post": d["first_post_date"],
             "combination": d["n_drug_interventions"] > 1,
             "url": f"https://clinicaltrials.gov/study/{d['nct_id']}",
         })
