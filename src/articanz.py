@@ -16,6 +16,7 @@ import requests
 
 TIMEOUT = 120
 GENERIC_CATYPE = {"Cancer", "Solid tumour", "Carcinoma"}
+ADC = "Antibody-drug conjugate"
 
 
 def fetch_tsv(url: str) -> list[dict]:
@@ -62,7 +63,7 @@ def tag_vals(cell: str | None, prefix: str) -> list[str]:
 def modality_of(cls: str) -> str:
     c = cls.lower()
     if "antibody-drug_conjugate" in c or "antibody_drug_conjugate" in c:
-        return "Antibody-drug conjugate"
+        return ADC
     if "t-cell_engager" in c:
         return "T-cell engager"
     if "radioligand" in c or "radioconjugate" in c:
@@ -111,7 +112,6 @@ def target_of(cls: str) -> str:
         else:
             m = re.match(r"^(.+?)_(?:inhibitor|degrader|agonist|antagonist)$", base)
             t = m.group(1) if m else base.replace("_", " ")
-    # same bispecific written two ways; unknown-target ADCs
     if t == "EGFR/cMET":
         t = "EGFR/cMET*"
     if re.match(r"^antibody.drug conjugate$", t):
@@ -143,10 +143,15 @@ def build(datasets: dict[str, str], intent_labels: dict[str, str]) -> list[dict]
             # leaks targets across modalities: a trial combining an ADC with
             # pembrolizumab would otherwise show PD-1 as an ADC target.
             pairs = sorted({(modality_of(c), target_of(c)) for c in classes})
+            # The "extra" exports carry no free-text title. Fall back to any
+            # title-ish column if a future export adds one.
+            title = next((row[k] for k in ("title", "brief_title", "public_title")
+                          if row.get(k)), "")
             rec = {
                 "registry": "ARTICANZ",
                 "trial_id": tid,
                 "intent": intent,
+                "title": title,
                 "cancer_types": cancer_types(row),
                 "classes": [{"m": m, "t": t} for m, t in pairs],
                 "modalities": sorted({m for m, _ in pairs}),
@@ -160,7 +165,6 @@ def build(datasets: dict[str, str], intent_labels: dict[str, str]) -> list[dict]
                 "url": trial_url(tid),
             }
             if tid in seen:
-                # a trial listed in both files spans both intents
                 seen[tid]["intent"] = "Both"
                 for f in ("cancer_types", "modalities", "drugs", "states"):
                     seen[tid][f] = sorted(set(seen[tid][f]) | set(rec[f]))
@@ -169,3 +173,51 @@ def build(datasets: dict[str, str], intent_labels: dict[str, str]) -> list[dict]
             else:
                 seen[tid] = rec
     return list(seen.values())
+
+
+def adc_drug_names(records: list[dict]) -> list[str]:
+    """Drug names that ARTiCANZ only ever associates with ADC trials.
+
+    ARTiCANZ lists every focused_drug on a trial, so a combination study
+    contributes both the conjugate and its partner. Taking the set difference
+    -- names seen in ADC trials MINUS names seen in any non-ADC trial --
+    removes comparators and backbones automatically: pembrolizumab and
+    bevacizumab appear all over the non-ADC corpus and drop out, while
+    DB-1311 or Trastuzumab Deruxtecan appear only alongside ADC classes and
+    survive. Naked trastuzumab correctly drops out; the conjugate does not.
+
+    This is what lets the ClinicalTrials.gov drug list maintain itself: a new
+    agent becomes searchable the week ARTiCANZ's curators annotate it.
+    """
+    in_adc: set[str] = set()
+    in_other: set[str] = set()
+    for r in records:
+        bucket = in_adc if any(c["m"] == ADC for c in r["classes"]) else in_other
+        for d in r["drugs"]:
+            bucket.add(d.strip())
+    return sorted(n for n in (in_adc - in_other)
+                  if len(n) > 2 and n.casefold() not in DRUG_STOPLIST)
+
+
+# The set difference above removes any agent that also appears in a non-ADC
+# trial, which catches most comparators. It cannot catch one that happens to
+# appear ONLY alongside ADCs in this corpus -- topotecan does exactly that,
+# as the control arm of a B7-H3 ADC study. Feeding it into the confirmation
+# pattern would then match every topotecan chemotherapy trial on
+# ClinicalTrials.gov. Free cytotoxics and naked antibodies are therefore
+# excluded by name.
+DRUG_STOPLIST = {
+    # free camptothecins -- share the -tecan ending with conjugated payloads
+    "topotecan", "irinotecan", "liposomal irinotecan", "exatecan", "belotecan",
+    # common backbone chemotherapy
+    "docetaxel", "paclitaxel", "nab-paclitaxel", "carboplatin", "cisplatin",
+    "oxaliplatin", "gemcitabine", "capecitabine", "etoposide", "doxorubicin",
+    "cyclophosphamide", "fluorouracil", "pemetrexed", "vinorelbine",
+    "trifluridine/tipiracil", "eribulin",
+    # checkpoint inhibitors and naked antibodies
+    "pembrolizumab", "nivolumab", "atezolizumab", "durvalumab", "avelumab",
+    "ipilimumab", "bevacizumab", "trastuzumab", "pertuzumab", "cetuximab",
+    "rituximab", "ramucirumab", "zanidatamab",
+    # not a drug
+    "placebo", "best supportive care", "standard of care",
+}

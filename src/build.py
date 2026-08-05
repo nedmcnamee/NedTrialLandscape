@@ -4,9 +4,11 @@ Run locally:   python src/build.py
 In CI:         see .github/workflows/update.yml
 
 Writes:
-  docs/data.json   what the site reads
-  data/seen.json   trial_id -> date first seen, so the site can say
-                   "new this week" without storing full weekly snapshots
+  docs/data.json         what the site reads
+  data/seen.json         trial_id -> date first seen, so the site can say
+                         "new this week" without storing weekly snapshots
+  data/ctgov_drops.json  nct_id -> which filter excluded it, consumed by
+                         recall.py (not published, regenerated each run)
 """
 from __future__ import annotations
 
@@ -26,6 +28,7 @@ ROOT = pathlib.Path(__file__).resolve().parent.parent
 CONFIG = ROOT / "config.yaml"
 OUT = ROOT / "docs" / "data.json"
 SEEN = ROOT / "data" / "seen.json"
+DROPS = ROOT / "data" / "ctgov_drops.json"
 
 # Free-text cancer type -> tissue group, for ClinicalTrials.gov conditions.
 # Order matters: GIST must beat "gastro", neuroendocrine must beat organ
@@ -53,14 +56,9 @@ CTG_RULES = [
 CTG_RULES = [(g, re.compile(p, re.I)) for g, p in CTG_RULES]
 
 # A trial is "active" if it is open, about to open, or still running.
-# Everything else -- completed, terminated, withdrawn, suspended, unknown --
-# is history and can be hidden with the site's "Active trials only" toggle.
 ACTIVE_STATUSES = {
-    "RECRUITING",
-    "NOT_YET_RECRUITING",
-    "ENROLLING_BY_INVITATION",
-    "ACTIVE_NOT_RECRUITING",
-    "AVAILABLE",
+    "RECRUITING", "NOT_YET_RECRUITING", "ENROLLING_BY_INVITATION",
+    "ACTIVE_NOT_RECRUITING", "AVAILABLE",
 }
 
 
@@ -94,20 +92,29 @@ def main() -> int:
     cfg = load_config()
     lut = build_lookup(cfg)
     records: list[dict] = []
+    art: list[dict] = []
+    drops: dict[str, str] = {}
 
     if cfg["sources"]["articanz"]["enabled"]:
         print("ARTiCANZ")
         a = cfg["sources"]["articanz"]
-        records += articanz.build(a["datasets"], a["intent_labels"])
-        print(f"  {len(records)} trials")
+        art = articanz.build(a["datasets"], a["intent_labels"])
+        records += art
+        print(f"  {len(art)} trials")
 
     if cfg["sources"]["ctgov"]["enabled"]:
         print("ClinicalTrials.gov")
-        records += ctgov.build(cfg["sources"]["ctgov"])
+        # ARTiCANZ curators name the ADCs; inherit that list rather than
+        # hand-maintaining company codes. Falls back to the built-in list
+        # when ARTiCANZ is disabled.
+        harvested = articanz.adc_drug_names(art) if art else []
+        ctg, drops = ctgov.build(cfg["sources"]["ctgov"], extra_drugs=harvested)
+        records += ctg
 
     for r in records:
         r["tissue_groups"] = group_tissues(r["cancer_types"], lut)
         r["active"] = r["status"].upper() in ACTIVE_STATUSES
+        r.setdefault("title", "")
 
     # first-seen tracking -> "new this week" without storing weekly snapshots
     today = date.today().isoformat()
@@ -115,13 +122,12 @@ def main() -> int:
         seen = json.loads(SEEN.read_text()) if SEEN.exists() else {}
     except json.JSONDecodeError:
         seen = {}
-    is_seed = not seen          # missing, empty or corrupt -> treat as first build
+    is_seed = not seen
     for r in records:
         key = f"{r['registry']}:{r['trial_id']}"
         seen.setdefault(key, today)
         r["first_seen"] = seen[key]
     # On the very first build everything would look "new", which is noise.
-    # Backdate the seed run so the badge only means something from week two.
     if is_seed:
         seed_date = (date.today() - timedelta(days=365)).isoformat()
         seen = {k: seed_date for k in seen}
@@ -132,6 +138,7 @@ def main() -> int:
 
     SEEN.parent.mkdir(parents=True, exist_ok=True)
     SEEN.write_text(json.dumps(seen, indent=0, sort_keys=True))
+    DROPS.write_text(json.dumps(drops, indent=0, sort_keys=True))
 
     payload = {
         "generated": today,
