@@ -31,8 +31,7 @@ h2{font-size:16px;font-weight:500;margin:0 0 10px}
 .stat.new .v{color:var(--accent)}
 .tabs{display:flex;gap:4px;margin:0 0 14px;flex-wrap:wrap}
 .tabs button{border-radius:8px;padding:6px 14px;font-size:13px}
-.tabs button[aria-selected=true]{background:var(--accent);color:#fff;
-  border-color:var(--accent)}
+.tabs button[aria-selected=true]{background:var(--accent);color:#fff;border-color:var(--accent)}
 .panel{background:var(--card);border:.5px solid var(--line);border-radius:12px;
        padding:14px 16px;margin-bottom:18px}
 details.method summary{cursor:pointer;font-size:13px;color:var(--accent);
@@ -89,13 +88,10 @@ td.tid a{color:var(--accent);text-decoration:none;white-space:nowrap}
 .scale span{font-size:10px;font-variant-numeric:tabular-nums;display:block;
             margin-top:2px;color:var(--ink3)}
 .bars{display:flex;align-items:flex-end;gap:3px;height:150px;margin:6px 0 4px}
-.bars div{flex:1;min-width:6px;background:var(--c4);border-radius:2px 2px 0 0;
-          position:relative}
+.bars div{flex:1;min-width:6px;background:var(--c4);border-radius:2px 2px 0 0}
 .bars div:hover{background:var(--c6)}
 .blabels{display:flex;gap:3px;font-size:10px;color:var(--ink3)}
 .blabels span{flex:1;min-width:6px;text-align:center;overflow:hidden}
-.gapbar{height:10px;background:var(--c4);border-radius:2px;display:inline-block;
-        vertical-align:middle}
 .warn{color:var(--warn)}
 footer{margin-top:32px;padding-top:14px;border-top:.5px solid var(--line);
        font-size:12px;color:var(--ink3)}
@@ -120,14 +116,15 @@ button{font:inherit;padding:5px 10px;border-radius:6px;border:.5px solid var(--l
       <p><b>Where the data comes from.</b> Australian and New Zealand trials come
       from <a href="https://articanz.org" target="_blank">ARTiCANZ</a>, a
       specialist-curated registry that annotates each trial with a drug-class
-      ontolog. Global trials come from the
+      ontology &mdash; that curated ontology is what makes a target &times; tissue
+      view possible at all. Global trials come from the
       <a href="https://clinicaltrials.gov/data-api/api" target="_blank">ClinicalTrials.gov
       API v2</a>, filtered to confirmed ADCs.</p>
       <p><b>How the global set is assembled.</b> ClinicalTrials.gov has no
       drug-class ontology, so ADCs are identified three ways: a list of known
       agents, generic INN payload suffixes (<code>-tecan</code>,
       <code>-dotin</code>, <code>-tansine</code>, excluding free camptothecins
-      like irinotecan), and drug names harvested weekly from ARTiCANZ itself.
+      such as irinotecan), and drug names harvested weekly from ARTiCANZ itself.
       The Coverage tab reports how well that is working, measured against
       ARTiCANZ's curated calls.</p>
       <p><b>Reading the totals.</b> Every number counts <i>distinct trials</i>.
@@ -135,19 +132,9 @@ button{font:inherit;padding:5px 10px;border-radius:6px;border:.5px solid var(--l
       targets, or enrolling several cancer types, legitimately occupies more
       than one cell.</p>
       <p><b>Reading the colour.</b> The scale is logarithmic and rescales to
-<<<<<<< HEAD
-      whatever is on screen. Always read the legend rather than comparing
-      shades across different filter settings.</p>
-      <p><b>Caveats.</b> ARTiCANZ cancer types come from a controlled
-      vocabulary and map cleanly onto tissue groups. ClinicalTrials.gov conditions
-      are free text resolved by regular expressions, so its tissue grouping is
-      less reliable and its ADC detection can miss trials whose drug names aren't
-      yet in the pattern list.</p>
-=======
       whatever is on screen, because cell counts differ by an order of magnitude
       between the registries. Read the legend rather than comparing shades
       across different filter settings.</p>
->>>>>>> ea6924e (update funciton)
       <p><b>Rebuilt weekly</b>, Saturday mornings AEST, after ARTiCANZ's Friday
       refresh. Everything is open:
       <a href="https://github.com/nedmcnamee/NedTrialLandscape" target="_blank">github.com/nedmcnamee/NedTrialLandscape</a>
@@ -160,7 +147,6 @@ button{font:inherit;padding:5px 10px;border-radius:6px;border:.5px solid var(--l
 
   <div class="tabs" id="tabs">
     <button data-view="landscape" aria-selected="true">Landscape</button>
-    <button data-view="gap" aria-selected="false">Access gap</button>
     <button data-view="growth" aria-selected="false">Growth</button>
     <button data-view="coverage" aria-selected="false">Coverage</button>
   </div>
@@ -208,25 +194,6 @@ button{font:inherit;padding:5px 10px;border-radius:6px;border:.5px solid var(--l
       </div>
       <div style="overflow-x:auto"><table id="tbl"></table></div>
       <div id="more" style="margin-top:10px"></div>
-    </div>
-  </div>
-
-  <!-- Access gap -->
-  <div id="view-gap" class="hidden">
-    <div class="panel">
-      <h2>Targets with no ANZ trial at all</h2>
-      <p class="muted" style="margin-top:-4px">
-        ADC targets in global trials that have no ARTiCANZ trial anywhere. These
-        are the agents an Australian or New Zealand patient currently cannot
-        reach through a local study.</p>
-      <div style="overflow-x:auto"><table id="gap-target"></table></div>
-    </div>
-    <div class="panel">
-      <h2>Target &times; tissue combinations available globally but not locally</h2>
-      <p class="muted" style="margin-top:-4px">
-        The target is in ANZ trials for some tumour type, but not this one.
-        Honours the phase, tissue-group and active filters above.</p>
-      <div style="overflow-x:auto"><table id="gap-pair"></table></div>
     </div>
   </div>
 
@@ -279,6 +246,7 @@ const RAMP=['var(--c1)','var(--c2)','var(--c3)','var(--c4)','var(--c5)','var(--c
 const INK=['#042c53','#042c53','#042c53','#e6f1fb','#e6f1fb','#e6f1fb'];
 const ADC='Antibody-drug conjugate';
 const ARTI='ARTICANZ', CTG='ClinicalTrials.gov';
+const VIEWS=['landscape','growth','coverage'];
 let DATA=null, RECALL=null, SEL=null, LIMIT=50, SORT={k:'trial_id',d:1}, VIEW='landscape';
 
 const $=id=>document.getElementById(id);
@@ -286,6 +254,10 @@ const uniq=a=>[...new Set(a)].sort();
 const el=(t,c,x)=>{const e=document.createElement(t); if(c)e.className=c;
   if(x!==undefined)e.textContent=x; return e;};
 const isAdc=t=>t.classes.some(c=>c.m===ADC);
+const hrow=cells=>{const tr=el('tr'); cells.forEach(c=>{const th=el('th',null,c);
+  th.style.cursor='default'; tr.appendChild(th);}); return tr;};
+const trow=cells=>{const tr=el('tr'); cells.forEach(c=>tr.appendChild(el('td','muted',c)));
+  return tr;};
 
 function fillSelect(id,vals,allLabel){
   const s=$(id); s.innerHTML='';
@@ -295,8 +267,7 @@ function fillSelect(id,vals,allLabel){
 
 /* ---- URL state -----------------------------------------------------------
    Filters live in the query string so a view can be sent to someone rather
-   than screenshotted. Written with replaceState so the back button is not
-   flooded with every slider nudge. */
+   than screenshotted. replaceState keeps the back button usable. */
 const FIELDS=[['reg','f-reg'],['mod','f-mod'],['intent','f-intent'],
   ['phase','f-phase'],['state','f-state'],['group','f-group'],
   ['min','f-min'],['max','f-max'],['q','f-q']];
@@ -304,18 +275,18 @@ const FLAGS=[['active','f-active'],['basket','f-basket'],['new','f-newonly']];
 
 function writeState(){
   const p=new URLSearchParams();
-  FIELDS.forEach(([k,id])=>{ const v=$(id).value; if(v) p.set(k,v); });
-  FLAGS.forEach(([k,id])=>{ if($(id).checked) p.set(k,'1'); });
+  FIELDS.forEach(([k,id])=>{const v=$(id).value; if(v) p.set(k,v);});
+  FLAGS.forEach(([k,id])=>{if($(id).checked) p.set(k,'1');});
   if(VIEW!=='landscape') p.set('view',VIEW);
   history.replaceState(null,'', p.toString()? '?'+p : location.pathname);
 }
 function readState(){
   const p=new URLSearchParams(location.search);
-  if(!p.toString()) return false;
-  FIELDS.forEach(([k,id])=>{ if(p.has(k)) $(id).value=p.get(k); });
-  FLAGS.forEach(([k,id])=>{ $(id).checked=p.get(k)==='1'; });
-  if(p.has('view')) VIEW=p.get('view');
-  return true;
+  if(!p.toString()) return;
+  FIELDS.forEach(([k,id])=>{if(p.has(k)) $(id).value=p.get(k);});
+  FLAGS.forEach(([k,id])=>{$(id).checked=p.get(k)==='1';});
+  // tolerate links to the retired access-gap view
+  if(p.has('view') && VIEWS.includes(p.get('view'))) VIEW=p.get('view');
 }
 
 // ClinicalTrials.gov is fetched as an ADC-only set, so the modality selector
@@ -329,10 +300,9 @@ function syncModality(){
 }
 
 /* ---- colour scale --------------------------------------------------------
-   Counts span an order of magnitude between registries (ARTiCANZ tops out
-   around 6, ClinicalTrials.gov above 100). A fixed 1..6 ramp saturates at the
-   third bin. So the scale is computed from the largest cell on screen, and is
-   logarithmic because the distribution is heavily skewed. */
+   Counts span an order of magnitude between registries. A fixed 1..6 ramp
+   saturates at the third bin, so the scale is computed from the largest cell
+   on screen, and is logarithmic because the distribution is heavily skewed. */
 function makeScale(max){
   if(max<=6){
     const lo=[]; for(let i=1;i<=Math.max(max,1);i++) lo.push(i);
@@ -392,10 +362,10 @@ function filtered(){
 
 // Panel and tissue names contain spaces and slashes, so the composite key
 // needs a separator that cannot occur in the data.
-const SEP='';
+const SEP='\u0001';
 
 // Every total counts DISTINCT trials via Sets. Summing cell values would
-// double-count a trial that spans two targets or two cancer types, which is
+// double-count a trial spanning two targets or two cancer types, which is
 // also why the margins do not add up to the grand total.
 function buildMatrix(rows){
   const mod=$('f-mod').value, minCol=+$('f-min').value, maxCol=+$('f-max').value;
@@ -546,109 +516,29 @@ function drawTable(rows){
   }
 }
 
-/* ---- access gap ----------------------------------------------------------
-   The clinical question: which ADC targets are being trialled somewhere in
-   the world but nowhere a patient here can reach? Computed as a set
-   difference between the two registries, honouring phase / tissue / active
-   filters but ignoring the registry selector (it needs both sides). */
-function gapSets(){
-  const ph=$('f-phase').value, grp=$('f-group').value,
-        activeOnly=$('f-active').checked, hideBasket=$('f-basket').checked;
-  const ok=t=>isAdc(t) && (!ph||t.phase===ph) && (!grp||t.tissue_groups.includes(grp))
-            && (!activeOnly||t.active);
-  const anzTarget=new Set(), anzPair=new Set();
-  const globalPair=new Map(), globalTarget=new Map();
-  DATA.trials.filter(ok).forEach(t=>{
-    const tg=uniq(t.classes.filter(c=>c.m===ADC).map(c=>c.t));
-    const groups=hideBasket
-      ? t.tissue_groups.filter(g=>g!=='Pan-cancer / basket') : t.tissue_groups;
-    tg.forEach(target=>{
-      if(t.registry===ARTI){
-        anzTarget.add(target);
-        groups.forEach(g=>anzPair.add(target+SEP+g));
-      }else if(t.registry===CTG){
-        if(!globalTarget.has(target)) globalTarget.set(target,new Set());
-        globalTarget.get(target).add(t.trial_id);
-        groups.forEach(g=>{
-          const k=target+SEP+g;
-          if(!globalPair.has(k)) globalPair.set(k,new Set());
-          globalPair.get(k).add(t.trial_id);
-        });
-      }
-    });
-  });
-  return {anzTarget,anzPair,globalPair,globalTarget};
-}
-
-function drawGap(){
-  const {anzTarget,anzPair,globalPair,globalTarget}=gapSets();
-
-  const tgtRows=[...globalTarget.entries()]
-    .filter(([t])=>!anzTarget.has(t))
-    .map(([t,ids])=>({target:t,n:ids.size}))
-    .sort((a,b)=>b.n-a.n);
-  const maxT=Math.max(1,...tgtRows.map(r=>r.n));
-  const t1=$('gap-target'); t1.innerHTML='';
-  t1.appendChild(hrow(['Target','Global trials','']));
-  if(!tgtRows.length)
-    t1.appendChild(trow(['—','','Every target in the global set also has an ANZ trial.']));
-  tgtRows.forEach(r=>{
-    const tr=el('tr');
-    tr.appendChild(el('td',null,r.target));
-    tr.appendChild(el('td',null,String(r.n)));
-    const td=el('td'); const bar=el('span','gapbar');
-    bar.style.width=(120*r.n/maxT)+'px'; td.appendChild(bar); tr.appendChild(td);
-    t1.appendChild(tr);
-  });
-
-  const pairRows=[...globalPair.entries()]
-    .filter(([k])=>!anzPair.has(k))
-    .map(([k,ids])=>{const [target,group]=k.split(SEP);
-      return {target,group,n:ids.size,inAnz:anzTarget.has(target)};})
-    .filter(r=>r.inAnz)      // target exists locally, just not for this tissue
-    .sort((a,b)=>b.n-a.n).slice(0,60);
-  const maxP=Math.max(1,...pairRows.map(r=>r.n));
-  const t2=$('gap-pair'); t2.innerHTML='';
-  t2.appendChild(hrow(['Target','Tissue group','Global trials','']));
-  if(!pairRows.length) t2.appendChild(trow(['—','','','No gaps under these filters.']));
-  pairRows.forEach(r=>{
-    const tr=el('tr');
-    tr.appendChild(el('td',null,r.target));
-    tr.appendChild(el('td',null,r.group));
-    tr.appendChild(el('td',null,String(r.n)));
-    const td=el('td'); const bar=el('span','gapbar');
-    bar.style.width=(120*r.n/maxP)+'px'; td.appendChild(bar); tr.appendChild(td);
-    t2.appendChild(tr);
-  });
-}
-const hrow=cells=>{const tr=el('tr'); cells.forEach(c=>{const th=el('th',null,c);
-  th.style.cursor='default'; tr.appendChild(th);}); return tr;};
-const trow=cells=>{const tr=el('tr'); cells.forEach(c=>tr.appendChild(el('td','muted',c)));
-  return tr;};
-
 /* ---- growth -------------------------------------------------------------- */
-function drawBars(barsId,labId,pairs,note){
+function drawBars(barsId,labId,pairs){
   const bars=$(barsId), labs=$(labId); bars.innerHTML=''; labs.innerHTML='';
+  if(!pairs.length){ bars.appendChild(el('div','muted','')); return; }
   const max=Math.max(1,...pairs.map(p=>p[1]));
   pairs.forEach(([k,v])=>{
     const d=el('div'); d.style.height=Math.max(2,100*v/max)+'%';
     d.title=`${k}: ${v} trial${v>1?'s':''}`; bars.appendChild(d);
     labs.appendChild(el('span',null,k));
   });
-  if(note) $(note[0]).textContent=note[1];
 }
 function drawGrowth(){
   const adc=DATA.trials.filter(isAdc);
   const byYear={};
   adc.filter(t=>t.registry===CTG&&t.year).forEach(t=>{byYear[t.year]=(byYear[t.year]||0)+1;});
   const years=Object.keys(byYear).sort();
-  drawBars('bars-year','lab-year',years.map(y=>[y,byYear[y]]),
-    ['growth-note',`${years.length? 'Registration year of every confirmed ADC trial in the global set. '
-      : ''}Local ARTiCANZ records carry no registration date, so they are not shown here.`]);
+  drawBars('bars-year','lab-year',years.map(y=>[y,byYear[y]]));
+  $('growth-note').textContent = years.length
+    ? 'Registration year of every confirmed ADC trial in the global set. ARTiCANZ records carry no registration date, so they are not shown here.'
+    : 'No ClinicalTrials.gov trials in this build yet.';
 
   const bySeen={};
-  adc.forEach(t=>{const m=(t.first_seen||'').slice(0,7);
-    if(m) bySeen[m]=(bySeen[m]||0)+1;});
+  adc.forEach(t=>{const m=(t.first_seen||'').slice(0,7); if(m) bySeen[m]=(bySeen[m]||0)+1;});
   const months=Object.keys(bySeen).sort();
   drawBars('bars-seen','lab-seen',months.map(m=>[m,bySeen[m]]));
 }
@@ -661,10 +551,14 @@ function drawCoverage(){
     pol.appendChild(el('p','muted','Coverage report not available for this build.'));
     return;
   }
-  const S=[['Recall (in scope)',RECALL.recall_in_scope_pct!=null?RECALL.recall_in_scope_pct+'%':'—'],
+  const pct = RECALL.recall_in_scope_pct!=null ? RECALL.recall_in_scope_pct
+            : RECALL.recall_pct;
+  const S=[['Recall'+(RECALL.recall_in_scope_pct!=null?' (in scope)':''),
+            pct!=null?pct+'%':'—'],
            ['ARTiCANZ ADC trials',RECALL.articanz_adc],
            ['Matched in global set',RECALL.matched],
-           ['Missed by classifier',RECALL.classifier_missed!=null?RECALL.classifier_missed:'—'],
+           ['Missed by classifier',RECALL.classifier_missed!=null
+             ? RECALL.classifier_missed : (RECALL.missing||[]).length],
            ['Excluded on purpose',RECALL.policy_excluded!=null?RECALL.policy_excluded:'—']];
   S.forEach(([k,v])=>{const s=el('div','stat');
     s.appendChild(el('div','k',k)); s.appendChild(el('div','v',String(v))); host.appendChild(s);});
@@ -689,20 +583,18 @@ function drawCoverage(){
     tr.appendChild(el('td',null,(m.targets||[]).join(', ')));
     tr.appendChild(el('td',null,(m.drugs||[]).join(', ')));
     tr.appendChild(el('td',null,(m.cancer_types||[]).join('; ')));
-    tr.appendChild(el('td','warn',(m.reason||'').replace(/_/g,' ')));
+    tr.appendChild(el('td','warn',(m.reason||'not recorded').replace(/_/g,' ')));
     tb.appendChild(tr);
   });
 }
 
 /* ---- view switching ------------------------------------------------------ */
 function setView(v){
-  VIEW=v;
-  ['landscape','gap','growth','coverage'].forEach(k=>
-    $('view-'+k).classList.toggle('hidden',k!==v));
+  VIEW=VIEWS.includes(v)?v:'landscape';
+  VIEWS.forEach(k=>$('view-'+k).classList.toggle('hidden',k!==VIEW));
   [...$('tabs').children].forEach(b=>
-    b.setAttribute('aria-selected',String(b.dataset.view===v)));
-  // the filter panel is meaningless on Coverage
-  $('filters').classList.toggle('hidden',v==='coverage');
+    b.setAttribute('aria-selected',String(b.dataset.view===VIEW)));
+  $('filters').classList.toggle('hidden',VIEW!=='landscape');
   render();
 }
 
@@ -712,7 +604,6 @@ function render(){
   $('v-max').textContent=$('f-max').value;
   writeState();
   if(VIEW==='landscape'){ const rows=filtered(); drawHeatmap(rows); drawTable(rows); }
-  else if(VIEW==='gap') drawGap();
   else if(VIEW==='growth') drawGrowth();
   else drawCoverage();
 }
