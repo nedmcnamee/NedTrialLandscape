@@ -3,13 +3,13 @@
  "articanz_adc_with_nct": 136,
  "matched": 101,
  "recall_pct": 74.3,
- "recall_in_scope_pct": 82.8,
- "policy_excluded": 14,
- "classifier_missed": 21,
+ "recall_in_scope_pct": 82.1,
+ "policy_excluded": 13,
+ "classifier_missed": 22,
  "policy_reasons": {
   "haematological": 1,
   "status:UNKNOWN": 3,
-  "not_yet_recruiting": 10
+  "not_yet_recruiting": 9
  },
  "missing": [
   {
@@ -77,6 +77,20 @@
     "Breast cancer",
     "Gastric cancer",
     "Gastroesophageal junction adenocarcinoma",
+    "Solid tumour"
+   ]
+  },
+  {
+   "nct_id": "NCT06234423",
+   "reason": "no_adc_vocabulary",
+   "drugs": [
+    "AMT-707"
+   ],
+   "targets": [
+    "CDH6"
+   ],
+   "cancer_types": [
+    "Ovarian cancer",
     "Solid tumour"
    ]
   },
@@ -352,6 +366,10 @@
   },
   {
    "name": "Caxmotabart Entudotin",
+   "n": 1
+  },
+  {
+   "name": "AMT-707",
    "n": 1
   },
   {
