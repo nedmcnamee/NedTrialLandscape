@@ -1,15 +1,15 @@
 {
  "articanz_adc": 137,
- "articanz_adc_with_nct": 136,
- "matched": 101,
- "recall_pct": 74.3,
- "recall_in_scope_pct": 82.1,
- "policy_excluded": 13,
+ "articanz_adc_with_nct": 137,
+ "matched": 103,
+ "recall_pct": 75.2,
+ "recall_in_scope_pct": 82.4,
+ "policy_excluded": 12,
  "classifier_missed": 22,
  "policy_reasons": {
-  "haematological": 1,
+  "status:SUSPENDED": 1,
   "status:UNKNOWN": 3,
-  "not_yet_recruiting": 9
+  "not_yet_recruiting": 8
  },
  "missing": [
   {
