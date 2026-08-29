@@ -1,13 +1,12 @@
 {
- "articanz_adc": 137,
+ "articanz_adc": 139,
  "articanz_adc_with_nct": 137,
  "matched": 103,
  "recall_pct": 75.2,
- "recall_in_scope_pct": 82.4,
- "policy_excluded": 12,
- "classifier_missed": 22,
+ "recall_in_scope_pct": 81.7,
+ "policy_excluded": 11,
+ "classifier_missed": 23,
  "policy_reasons": {
-  "status:SUSPENDED": 1,
   "status:UNKNOWN": 3,
   "not_yet_recruiting": 8
  },
@@ -78,6 +77,26 @@
     "Gastric cancer",
     "Gastroesophageal junction adenocarcinoma",
     "Solid tumour"
+   ]
+  },
+  {
+   "nct_id": "NCT06084481",
+   "reason": "no_adc_vocabulary",
+   "drugs": [
+    "Telisotuzumab adizutecan"
+   ],
+   "targets": [
+    "cMET"
+   ],
+   "cancer_types": [
+    "Biliary tract cancer",
+    "Breast cancer",
+    "Epithelial Ovarian Cancer",
+    "Head and neck squamous cell carcinoma",
+    "Hepatocellular carcinoma",
+    "Oesophageal squamous cell carcinoma",
+    "Pancreatic adenocarcinoma",
+    "Triple-negative breast cancer"
    ]
   },
   {
@@ -366,6 +385,10 @@
   },
   {
    "name": "Caxmotabart Entudotin",
+   "n": 1
+  },
+  {
+   "name": "Telisotuzumab adizutecan",
    "n": 1
   },
   {
