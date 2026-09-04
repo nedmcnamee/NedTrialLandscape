@@ -1,11 +1,11 @@
 {
- "articanz_adc": 139,
- "articanz_adc_with_nct": 137,
+ "articanz_adc": 141,
+ "articanz_adc_with_nct": 139,
  "matched": 103,
- "recall_pct": 75.2,
- "recall_in_scope_pct": 81.7,
+ "recall_pct": 74.1,
+ "recall_in_scope_pct": 80.5,
  "policy_excluded": 11,
- "classifier_missed": 23,
+ "classifier_missed": 25,
  "policy_reasons": {
   "status:UNKNOWN": 3,
   "not_yet_recruiting": 8
@@ -159,6 +159,25 @@
    ]
   },
   {
+   "nct_id": "NCT06400472",
+   "reason": "no_adc_vocabulary",
+   "drugs": [
+    "LY4170156"
+   ],
+   "targets": [
+    "FR-alpha"
+   ],
+   "cancer_types": [
+    "Cervical cancer",
+    "Colorectal cancer",
+    "Endometrial cancer",
+    "Non-small cell lung cancer",
+    "Ovarian cancer",
+    "Pancreatic cancer",
+    "Triple-negative breast cancer"
+   ]
+  },
+  {
    "nct_id": "NCT06400485",
    "reason": "never_retrieved",
    "drugs": [
@@ -184,6 +203,21 @@
    ],
    "cancer_types": [
     "HER2-positive breast cancer"
+   ]
+  },
+  {
+   "nct_id": "NCT06581406",
+   "reason": "never_retrieved",
+   "drugs": [
+    "Ipilimumab",
+    "Nivolumab",
+    "Sturlimogene Erparepvec"
+   ],
+   "targets": [
+    "EGFR/CDH17*"
+   ],
+   "cancer_types": [
+    "Uveal melanoma"
    ]
   },
   {
@@ -400,7 +434,15 @@
    "n": 1
   },
   {
+   "name": "LY4170156",
+   "n": 1
+  },
+  {
    "name": "AMT-676",
+   "n": 1
+  },
+  {
+   "name": "Sturlimogene Erparepvec",
    "n": 1
   },
   {
