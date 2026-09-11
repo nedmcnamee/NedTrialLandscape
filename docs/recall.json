@@ -1,9 +1,9 @@
 {
- "articanz_adc": 141,
- "articanz_adc_with_nct": 139,
- "matched": 103,
- "recall_pct": 74.1,
- "recall_in_scope_pct": 80.5,
+ "articanz_adc": 140,
+ "articanz_adc_with_nct": 138,
+ "matched": 102,
+ "recall_pct": 73.9,
+ "recall_in_scope_pct": 80.3,
  "policy_excluded": 11,
  "classifier_missed": 25,
  "policy_reasons": {
@@ -259,7 +259,6 @@
     "EGFR/cMET*"
    ],
    "cancer_types": [
-    "Cancer",
     "Solid tumour"
    ]
   },
