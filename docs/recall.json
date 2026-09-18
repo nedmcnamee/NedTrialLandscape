@@ -1,9 +1,9 @@
 {
- "articanz_adc": 140,
- "articanz_adc_with_nct": 138,
- "matched": 102,
- "recall_pct": 73.9,
- "recall_in_scope_pct": 80.3,
+ "articanz_adc": 139,
+ "articanz_adc_with_nct": 137,
+ "matched": 101,
+ "recall_pct": 73.7,
+ "recall_in_scope_pct": 80.2,
  "policy_excluded": 11,
  "classifier_missed": 25,
  "policy_reasons": {
@@ -162,7 +162,8 @@
    "nct_id": "NCT06400472",
    "reason": "no_adc_vocabulary",
    "drugs": [
-    "LY4170156"
+    "LY4170156",
+    "Sofetabart Mipitecan"
    ],
    "targets": [
     "FR-alpha"
@@ -434,6 +435,10 @@
   },
   {
    "name": "LY4170156",
+   "n": 1
+  },
+  {
+   "name": "Sofetabart Mipitecan",
    "n": 1
   },
   {
