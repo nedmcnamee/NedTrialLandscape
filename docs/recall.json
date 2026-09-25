@@ -1,14 +1,14 @@
 {
- "articanz_adc": 139,
- "articanz_adc_with_nct": 137,
- "matched": 101,
- "recall_pct": 73.7,
- "recall_in_scope_pct": 80.2,
- "policy_excluded": 11,
+ "articanz_adc": 140,
+ "articanz_adc_with_nct": 138,
+ "matched": 103,
+ "recall_pct": 74.6,
+ "recall_in_scope_pct": 80.5,
+ "policy_excluded": 10,
  "classifier_missed": 25,
  "policy_reasons": {
   "status:UNKNOWN": 3,
-  "not_yet_recruiting": 8
+  "not_yet_recruiting": 7
  },
  "missing": [
   {
