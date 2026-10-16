@@ -298,7 +298,7 @@ def build(cfg, extra_drugs=(), target_map=None, log=print):
         if cfg["exclude_not_yet_recruiting"] and d["status"].upper() == "NOT_YET_RECRUITING":
             drops[nid] = "not_yet_recruiting"
             continue
-                blob = f"{d['conditions']} {d['brief_title']} {d['interventions']}"
+        blob = f"{d['conditions']} {d['brief_title']} {d['interventions']}"
         if cfg["exclude_haematological"] and is_haem(blob):
             drops[nid] = "haematological"
             continue
