@@ -109,6 +109,18 @@ HAEM_ACRONYMS = re.compile(r"\bAML\b|\bALL\b|\bCLL\b|\bCML\b|\bMDS\b|\bMPN\b|\bA
 def is_haem(txt: str) -> bool:
     return bool(HAEM_WORDS.search(txt) or HAEM_ACRONYMS.search(txt))
 
+# The site is an oncology trial landscape. Widening the drug patterns pulled in
+# whole unrelated therapeutic areas -- vasculitis, keratitis, tendinopathy,
+# graft-versus-host disease -- because a drug code matched loosely. A trial has
+# to look like cancer somewhere in its conditions or title to belong here.
+ONCOLOGY = re.compile("|".join([
+    r"cancer", r"carcinom", r"tumou?r", r"neoplas", r"oncolog", r"malignan",
+    r"sarcoma", r"melanoma", r"lymphoma", r"leuk(a)?emia", r"myeloma",
+    r"glioma", r"glioblast", r"blastoma", r"mesotheliom", r"metasta",
+    r"myelodysplas", r"myelofibrosis", r"polycythemia",
+    r"\bNSCLC\b", r"\bSCLC\b", r"\bHCC\b", r"\bRCC\b", r"\bCRC\b",
+    r"\bTNBC\b", r"\bGIST\b", r"\bDLBCL\b", r"\bAML\b", r"\bCLL\b",
+]), I)
 
 # ---- target assignment ------------------------------------------------------
 
@@ -248,9 +260,13 @@ def build(cfg, extra_drugs=(), target_map=None, log=print):
     """Returns (records, drops). drops maps nct_id -> reason it was excluded."""
     adv = _advanced(cfg)
 
-    extra = sorted({d for d in extra_drugs if d})
-    confirm = re.compile(
-        CONFIRM_BASE + ("|" + "|".join(re.escape(d) for d in extra) if extra else ""), I)
+        # Harvested names are bare literals, so they need word boundaries -- without
+    # them a short code matches inside unrelated text. Names under 4 characters
+    # are too collision-prone to search on at all.
+    extra = sorted({d for d in extra_drugs if d and len(d) >= 4})
+    extra_pat = "|".join(r"(?<![A-Za-z0-9])" + re.escape(d) + r"(?![A-Za-z0-9])"
+                         for d in extra)
+    confirm = re.compile(CONFIRM_BASE + ("|" + extra_pat if extra else ""), I)
     matchers = build_matchers(target_map)
     log(f"  {len(extra)} drug names and {len(matchers)} target mappings "
         f"harvested from ARTiCANZ")
@@ -282,9 +298,12 @@ def build(cfg, extra_drugs=(), target_map=None, log=print):
         if cfg["exclude_not_yet_recruiting"] and d["status"].upper() == "NOT_YET_RECRUITING":
             drops[nid] = "not_yet_recruiting"
             continue
-        blob = f"{d['conditions']} {d['brief_title']} {d['interventions']}"
+                blob = f"{d['conditions']} {d['brief_title']} {d['interventions']}"
         if cfg["exclude_haematological"] and is_haem(blob):
             drops[nid] = "haematological"
+            continue
+        if not ONCOLOGY.search(f"{d['conditions']} {d['brief_title']}"):
+            drops[nid] = "not_oncology"
             continue
         if not re.search(r"DRUG|BIOLOGICAL", d["intervention_types"], I):
             drops[nid] = "no_drug_intervention"
