@@ -630,7 +630,7 @@ function applyDefaults(d){
   $('f-mod').value=ADC;
   ['f-intent','f-phase','f-state','f-group','f-q'].forEach(i=>$(i).value='');
   $('f-active').checked=$('f-basket').checked=$('f-newonly').checked=false;
-  $('f-min').value=d.display.default_min_trials_per_target||2;
+  $('f-min').value=d.display.default_min_trials_per_target||1;
   $('f-max').value=d.display.default_max_targets||25;
   SEL=null; LIMIT=50;
 }
