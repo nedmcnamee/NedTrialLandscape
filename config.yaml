@@ -23,7 +23,7 @@ sources:
   ctgov:
     enabled: true
     start_date: "2018-01-01"
-    phases: ["PHASE1", "PHASE2", "PHASE3"]
+    phases: ["PHASE1", "PHASE2", "PHASE3", "PHASE4", "NA"]
     # Excluded from the primary set (v9 behaviour)
     exclude_statuses: ["WITHDRAWN", "TERMINATED", "SUSPENDED", "UNKNOWN"]
     exclude_not_yet_recruiting: true
