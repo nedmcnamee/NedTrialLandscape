@@ -238,6 +238,7 @@ def _parse(s: dict) -> dict:
     cond = ps.get("conditionsModule", {})
     spon = ps.get("sponsorCollaboratorsModule", {})
     eli = ps.get("eligibilityModule", {})
+    desc = ps.get("descriptionModule", {})
     iv = arms.get("interventions") or []
     return {
         "nct_id": ids.get("nctId", ""),
@@ -253,6 +254,12 @@ def _parse(s: dict) -> dict:
                                     if (i.get("type") or "").upper() in ("DRUG", "BIOLOGICAL")),
         "eligibility_text": eli.get("eligibilityCriteria") or "",
         "enrollment": (des.get("enrollmentInfo") or {}).get("count"),
+        "intervention_other": "; ".join(n for i in iv
+                                    for n in (i.get("otherNames") or [])),
+        "intervention_desc": " ".join((i.get("description") or "") for i in iv),
+        "brief_summary": desc.get("briefSummary") or "",
+        "detailed_description": desc.get("detailedDescription") or "",
+        "keywords": "; ".join(cond.get("keywords") or []),
     }
 
 
@@ -308,18 +315,29 @@ def build(cfg, extra_drugs=(), target_map=None, log=print):
         if not re.search(r"DRUG|BIOLOGICAL", d["intervention_types"], I):
             drops[nid] = "no_drug_intervention"
             continue
-        arm = f"{d['interventions']} {d['brief_title']}"
-        full = f"{arm} {d['eligibility_text']}"
-        in_arm = bool(confirm.search(arm))
-        if not confirm.search(full):
-            drops[nid] = "no_adc_vocabulary"
+                # Synonyms and the intervention's own description belong to the
+        # intervention, so a match there still means the ADC IS the study drug.
+        # Company codes dominate ClinicalTrials.gov, so the INN often appears
+        # only in otherNames.
+        arm = " ".join([d["interventions"], d["intervention_other"],
+                        d["intervention_desc"], d["brief_title"]])
+        # Weaker: the ADC is described somewhere in the write-up. Could be
+        # background or a comparator, so it is tracked separately.
+        context = " ".join([d["brief_summary"], d["detailed_description"],
+                            d["keywords"]])
+
+        if confirm.search(arm):
+            tier = "arm"
+        elif confirm.search(context):
+            tier = "context"
+        else:
+            drops[nid] = ("adc_not_in_arm" if confirm.search(d["eligibility_text"])
+                          else "no_adc_vocabulary")
             continue
-        if not in_arm:
-            drops[nid] = "adc_not_in_arm"
-            continue
-        if PRIOR_ADC.search(d["eligibility_text"]) and not in_arm:
+        if tier == "context" and PRIOR_ADC.search(d["eligibility_text"]):
             drops[nid] = "prior_adc_context_only"
             continue
+        d["_tier"] = tier
         keep.append(d)
 
     log(f"  {len(keep)} confirmed ADC trials ({len(drops)} dropped)")
@@ -340,6 +358,7 @@ def build(cfg, extra_drugs=(), target_map=None, log=print):
             "drugs": [i.strip() for i in d["interventions"].split(";") if i.strip()],
             "phase": d["phase"].replace("PHASE", "Phase "),
             "status": d["status"],
+            "match_tier": d.get("_tier", "arm"),
             "states": [],
             "n_sites": 0,
             "sponsor": d["sponsor"],
