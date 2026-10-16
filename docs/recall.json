@@ -1,11 +1,11 @@
 {
  "articanz_adc": 146,
  "articanz_adc_with_nct": 144,
- "matched": 110,
- "recall_pct": 76.4,
- "recall_in_scope_pct": 81.5,
+ "matched": 124,
+ "recall_pct": 86.1,
+ "recall_in_scope_pct": 91.9,
  "policy_excluded": 9,
- "classifier_missed": 25,
+ "classifier_missed": 11,
  "policy_reasons": {
   "status:UNKNOWN": 3,
   "not_yet_recruiting": 6
@@ -51,35 +51,6 @@
    ]
   },
   {
-   "nct_id": "NCT05718895",
-   "reason": "no_adc_vocabulary",
-   "drugs": [
-    "ATG 022"
-   ],
-   "targets": [
-    "CLDN18.2"
-   ],
-   "cancer_types": [
-    "Solid tumour"
-   ]
-  },
-  {
-   "nct_id": "NCT05872295",
-   "reason": "no_adc_vocabulary",
-   "drugs": [
-    "Caxmotabart Entudotin"
-   ],
-   "targets": [
-    "ERBB2"
-   ],
-   "cancer_types": [
-    "Breast cancer",
-    "Gastric cancer",
-    "Gastroesophageal junction adenocarcinoma",
-    "Solid tumour"
-   ]
-  },
-  {
    "nct_id": "NCT06084481",
    "reason": "no_adc_vocabulary",
    "drugs": [
@@ -97,20 +68,6 @@
     "Oesophageal squamous cell carcinoma",
     "Pancreatic adenocarcinoma",
     "Triple-negative breast cancer"
-   ]
-  },
-  {
-   "nct_id": "NCT06234423",
-   "reason": "no_adc_vocabulary",
-   "drugs": [
-    "AMT-707"
-   ],
-   "targets": [
-    "CDH6"
-   ],
-   "cancer_types": [
-    "Ovarian cancer",
-    "Solid tumour"
    ]
   },
   {
@@ -146,39 +103,6 @@
    ]
   },
   {
-   "nct_id": "NCT06340568",
-   "reason": "adc_not_in_arm",
-   "drugs": [
-    "Trastuzumab Pamirtecan"
-   ],
-   "targets": [
-    "ERBB2"
-   ],
-   "cancer_types": [
-    "Endometrial cancer"
-   ]
-  },
-  {
-   "nct_id": "NCT06400472",
-   "reason": "no_adc_vocabulary",
-   "drugs": [
-    "LY4170156",
-    "Sofetabart Mipitecan"
-   ],
-   "targets": [
-    "FR-alpha"
-   ],
-   "cancer_types": [
-    "Cervical cancer",
-    "Colorectal cancer",
-    "Endometrial cancer",
-    "Non-small cell lung cancer",
-    "Ovarian cancer",
-    "Pancreatic cancer",
-    "Triple-negative breast cancer"
-   ]
-  },
-  {
    "nct_id": "NCT06400485",
    "reason": "never_retrieved",
    "drugs": [
@@ -189,21 +113,6 @@
    ],
    "cancer_types": [
     "Solid tumour"
-   ]
-  },
-  {
-   "nct_id": "NCT06435429",
-   "reason": "adc_not_in_arm",
-   "drugs": [
-    "Trastuzumab",
-    "Trastuzumab Deruxtecan",
-    "Zanidatamab"
-   ],
-   "targets": [
-    "ERBB2"
-   ],
-   "cancer_types": [
-    "HER2-positive breast cancer"
    ]
   },
   {
@@ -264,62 +173,6 @@
    ]
   },
   {
-   "nct_id": "NCT06827236",
-   "reason": "adc_not_in_arm",
-   "drugs": [
-    "Pumitamig",
-    "Trastuzumab Pamirtecan"
-   ],
-   "targets": [
-    "ERBB2"
-   ],
-   "cancer_types": [
-    "Breast cancer"
-   ]
-  },
-  {
-   "nct_id": "NCT06892548",
-   "reason": "adc_not_in_arm",
-   "drugs": [
-    "DB-1311",
-    "Pumitamig"
-   ],
-   "targets": [
-    "B7H3"
-   ],
-   "cancer_types": [
-    "Lung cancer"
-   ]
-  },
-  {
-   "nct_id": "NCT07144280",
-   "reason": "adc_not_in_arm",
-   "drugs": [
-    "Docetaxel",
-    "Fetrastobart Vedotin"
-   ],
-   "targets": [
-    "PD-L1"
-   ],
-   "cancer_types": [
-    "Non-small cell lung cancer",
-    "Small-cell neuroendocrine carcinoma"
-   ]
-  },
-  {
-   "nct_id": "NCT07166094",
-   "reason": "adc_not_in_arm",
-   "drugs": [
-    "Rinatabart sesutecan"
-   ],
-   "targets": [
-    "FR-alpha"
-   ],
-   "cancer_types": [
-    "Endometrial cancer"
-   ]
-  },
-  {
    "nct_id": "NCT07174583",
    "reason": "never_retrieved",
    "drugs": [
@@ -331,78 +184,15 @@
    "cancer_types": [
     "Small-cell lung cancer"
    ]
-  },
-  {
-   "nct_id": "NCT07218380",
-   "reason": "no_adc_vocabulary",
-   "drugs": [
-    "Enfortumab Vedotin",
-    "Pembrolizumab",
-    "Placebo",
-    "Vepugratinib"
-   ],
-   "targets": [
-    "NECTIN4"
-   ],
-   "cancer_types": [
-    "Urothelial carcinoma"
-   ]
-  },
-  {
-   "nct_id": "NCT07288177",
-   "reason": "no_adc_vocabulary",
-   "drugs": [
-    "Rinatabart sesutecan"
-   ],
-   "targets": [
-    "FR-alpha"
-   ],
-   "cancer_types": [
-    "Non-small cell lung cancer"
-   ]
-  },
-  {
-   "nct_id": "NCT07524348",
-   "reason": "no_adc_vocabulary",
-   "drugs": [
-    "SBE303"
-   ],
-   "targets": [
-    "NECTIN4"
-   ],
-   "cancer_types": [
-    "Solid tumour"
-   ]
-  },
-  {
-   "nct_id": "NCT07539311",
-   "reason": "adc_not_in_arm",
-   "drugs": [
-    "Rinatabart sesutecan"
-   ],
-   "targets": [
-    "FR-alpha"
-   ],
-   "cancer_types": [
-    "Gastrointestinal cancer"
-   ]
   }
  ],
  "candidate_drugs": [
   {
-   "name": "Trastuzumab Pamirtecan",
-   "n": 3
-  },
-  {
-   "name": "Rinatabart sesutecan",
-   "n": 3
-  },
-  {
-   "name": "Pumitamig",
-   "n": 2
-  },
-  {
    "name": "Telisotuzumab Vedotin",
+   "n": 1
+  },
+  {
+   "name": "Trastuzumab Pamirtecan",
    "n": 1
   },
   {
@@ -410,19 +200,7 @@
    "n": 1
   },
   {
-   "name": "ATG 022",
-   "n": 1
-  },
-  {
-   "name": "Caxmotabart Entudotin",
-   "n": 1
-  },
-  {
    "name": "Telisotuzumab adizutecan",
-   "n": 1
-  },
-  {
-   "name": "AMT-707",
    "n": 1
   },
   {
@@ -430,19 +208,7 @@
    "n": 1
   },
   {
-   "name": "LY4170156",
-   "n": 1
-  },
-  {
-   "name": "Sofetabart Mipitecan",
-   "n": 1
-  },
-  {
    "name": "AMT-676",
-   "n": 1
-  },
-  {
-   "name": "Trastuzumab Deruxtecan",
    "n": 1
   },
   {
@@ -462,23 +228,7 @@
    "n": 1
   },
   {
-   "name": "DB-1311",
-   "n": 1
-  },
-  {
-   "name": "Fetrastobart Vedotin",
-   "n": 1
-  },
-  {
    "name": "SHR-4849",
-   "n": 1
-  },
-  {
-   "name": "Enfortumab Vedotin",
-   "n": 1
-  },
-  {
-   "name": "SBE303",
    "n": 1
   }
  ]
