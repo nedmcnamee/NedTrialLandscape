@@ -32,7 +32,7 @@ sources:
 display:
   # Modality shown when the page first loads
   default_modality: "Antibody-drug conjugate"
-  default_min_trials_per_target: 2
+  default_min_trials_per_target: 1
   default_max_targets: 25
   group_tissues_by_default: true
 
