@@ -1,14 +1,14 @@
 {
- "articanz_adc": 140,
- "articanz_adc_with_nct": 138,
- "matched": 103,
- "recall_pct": 74.6,
- "recall_in_scope_pct": 80.5,
- "policy_excluded": 10,
- "classifier_missed": 25,
+ "articanz_adc": 146,
+ "articanz_adc_with_nct": 144,
+ "matched": 110,
+ "recall_pct": 76.4,
+ "recall_in_scope_pct": 80.9,
+ "policy_excluded": 8,
+ "classifier_missed": 26,
  "policy_reasons": {
   "status:UNKNOWN": 3,
-  "not_yet_recruiting": 7
+  "not_yet_recruiting": 5
  },
  "missing": [
   {
@@ -147,7 +147,7 @@
   },
   {
    "nct_id": "NCT06340568",
-   "reason": "no_adc_vocabulary",
+   "reason": "adc_not_in_arm",
    "drugs": [
     "Trastuzumab Pamirtecan"
    ],
@@ -293,7 +293,7 @@
   },
   {
    "nct_id": "NCT07144280",
-   "reason": "no_adc_vocabulary",
+   "reason": "adc_not_in_arm",
    "drugs": [
     "Docetaxel",
     "Fetrastobart Vedotin"
@@ -386,6 +386,19 @@
    "cancer_types": [
     "Solid tumour"
    ]
+  },
+  {
+   "nct_id": "NCT07539311",
+   "reason": "adc_not_in_arm",
+   "drugs": [
+    "Rinatabart sesutecan"
+   ],
+   "targets": [
+    "FR-alpha"
+   ],
+   "cancer_types": [
+    "Gastrointestinal cancer"
+   ]
   }
  ],
  "candidate_drugs": [
@@ -394,15 +407,15 @@
    "n": 3
   },
   {
+   "name": "Rinatabart sesutecan",
+   "n": 3
+  },
+  {
    "name": "Trastuzumab Deruxtecan",
    "n": 2
   },
   {
    "name": "Pumitamig",
-   "n": 2
-  },
-  {
-   "name": "Rinatabart sesutecan",
    "n": 2
   },
   {
