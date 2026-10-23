@@ -1,9 +1,9 @@
 {
- "articanz_adc": 146,
- "articanz_adc_with_nct": 144,
- "matched": 124,
- "recall_pct": 86.1,
- "recall_in_scope_pct": 91.9,
+ "articanz_adc": 145,
+ "articanz_adc_with_nct": 143,
+ "matched": 123,
+ "recall_pct": 86.0,
+ "recall_in_scope_pct": 91.8,
  "policy_excluded": 9,
  "classifier_missed": 11,
  "policy_reasons": {
