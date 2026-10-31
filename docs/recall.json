@@ -1,14 +1,14 @@
 {
  "articanz_adc": 145,
  "articanz_adc_with_nct": 143,
- "matched": 123,
- "recall_pct": 86.0,
- "recall_in_scope_pct": 91.8,
- "policy_excluded": 9,
- "classifier_missed": 11,
+ "matched": 125,
+ "recall_pct": 87.4,
+ "recall_in_scope_pct": 92.6,
+ "policy_excluded": 8,
+ "classifier_missed": 10,
  "policy_reasons": {
   "status:UNKNOWN": 3,
-  "not_yet_recruiting": 6
+  "not_yet_recruiting": 5
  },
  "missing": [
   {
@@ -68,38 +68,6 @@
     "Oesophageal squamous cell carcinoma",
     "Pancreatic adenocarcinoma",
     "Triple-negative breast cancer"
-   ]
-  },
-  {
-   "nct_id": "NCT06242470",
-   "reason": "no_adc_vocabulary",
-   "drugs": [
-    "Vobramitamab Tavatecan"
-   ],
-   "targets": [
-    "B7H3"
-   ],
-   "cancer_types": [
-    "Bladder cancer",
-    "Breast cancer",
-    "Castrate-resistant prostate cancer",
-    "Cervical cancer",
-    "Clear cell renal cell carcinoma",
-    "Colorectal cancer",
-    "Endometrial cancer",
-    "Gastric cancer",
-    "Gastroesophageal cancer",
-    "Head and neck squamous cell carcinoma",
-    "Hepatocellular carcinoma",
-    "Melanoma",
-    "Non-small cell lung cancer",
-    "Oesophageal cancer",
-    "Ovarian cancer",
-    "Pancreatic adenocarcinoma",
-    "Platinum resistant ovarian cancer",
-    "Prostate adenocarcinoma",
-    "Sarcoma",
-    "Small-cell lung cancer"
    ]
   },
   {
@@ -201,10 +169,6 @@
   },
   {
    "name": "Telisotuzumab adizutecan",
-   "n": 1
-  },
-  {
-   "name": "Vobramitamab Tavatecan",
    "n": 1
   },
   {
