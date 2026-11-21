@@ -1,11 +1,11 @@
 {
  "articanz_adc": 145,
  "articanz_adc_with_nct": 143,
- "matched": 125,
- "recall_pct": 87.4,
- "recall_in_scope_pct": 92.6,
+ "matched": 121,
+ "recall_pct": 84.6,
+ "recall_in_scope_pct": 89.6,
  "policy_excluded": 8,
- "classifier_missed": 10,
+ "classifier_missed": 14,
  "policy_reasons": {
   "status:UNKNOWN": 4,
   "not_yet_recruiting": 4
@@ -51,6 +51,19 @@
    ]
   },
   {
+   "nct_id": "NCT05914116",
+   "reason": "adc_not_in_arm",
+   "drugs": [
+    "Elfetabart Drozuntecan"
+   ],
+   "targets": [
+    "B7H3"
+   ],
+   "cancer_types": [
+    "Solid tumour"
+   ]
+  },
+  {
    "nct_id": "NCT06084481",
    "reason": "no_adc_vocabulary",
    "drugs": [
@@ -84,21 +97,6 @@
    ]
   },
   {
-   "nct_id": "NCT06581406",
-   "reason": "never_retrieved",
-   "drugs": [
-    "Ipilimumab",
-    "Nivolumab",
-    "Sturlimogene Erparepvec"
-   ],
-   "targets": [
-    "EGFR/CDH17*"
-   ],
-   "cancer_types": [
-    "Uveal melanoma"
-   ]
-  },
-  {
    "nct_id": "NCT06656390",
    "reason": "no_adc_vocabulary",
    "drugs": [
@@ -110,21 +108,6 @@
    "cancer_types": [
     "Cancer",
     "Solid tumour"
-   ]
-  },
-  {
-   "nct_id": "NCT06690775",
-   "reason": "never_retrieved",
-   "drugs": [
-    "Ixotatug vedotin"
-   ],
-   "targets": [
-    "CLDN6"
-   ],
-   "cancer_types": [
-    "Epithelial Ovarian Cancer",
-    "Fallopian tube cancer",
-    "Ovarian cancer"
    ]
   },
   {
@@ -141,6 +124,41 @@
    ]
   },
   {
+   "nct_id": "NCT06892548",
+   "reason": "prior_adc_context_only",
+   "drugs": [
+    "Elfetabart Drozuntecan",
+    "Pumitamig"
+   ],
+   "targets": [
+    "B7H3"
+   ],
+   "cancer_types": [
+    "Lung cancer"
+   ]
+  },
+  {
+   "nct_id": "NCT06953089",
+   "reason": "prior_adc_context_only",
+   "drugs": [
+    "Elfetabart Drozuntecan",
+    "Pumitamig",
+    "Sacituzumab Drozuntecan"
+   ],
+   "targets": [
+    "B7H3",
+    "Trop2"
+   ],
+   "cancer_types": [
+    "Cervical cancer",
+    "Head and neck squamous cell carcinoma",
+    "Hepatocellular carcinoma",
+    "Melanoma",
+    "Non-small cell lung cancer",
+    "Ovarian cancer"
+   ]
+  },
+  {
    "nct_id": "NCT07174583",
    "reason": "never_retrieved",
    "drugs": [
@@ -152,9 +170,65 @@
    "cancer_types": [
     "Small-cell lung cancer"
    ]
+  },
+  {
+   "nct_id": "NCT07277270",
+   "reason": "adc_not_in_arm",
+   "drugs": [
+    "Risvutatug Rezetecan"
+   ],
+   "targets": [
+    "B7H3"
+   ],
+   "cancer_types": [
+    "Colorectal adenocarcinoma",
+    "Prostate cancer"
+   ]
+  },
+  {
+   "nct_id": "NCT07531095",
+   "reason": "never_retrieved",
+   "drugs": [
+    "Tarlatamab",
+    "Zocilurtatug Pelitecan"
+   ],
+   "targets": [
+    "DLL3"
+   ],
+   "cancer_types": [
+    "Small-cell lung cancer"
+   ]
+  },
+  {
+   "nct_id": "NCT07707895",
+   "reason": "never_retrieved",
+   "drugs": [
+    "Obrixtamig",
+    "Zocilurtatug Pelitecan"
+   ],
+   "targets": [
+    "DLL3"
+   ],
+   "cancer_types": [
+    "Extra-pulmonary neuroendocrine carcinoma",
+    "Large cell neuroendocrine carcinoma of lung",
+    "Small-cell lung cancer"
+   ]
   }
  ],
  "candidate_drugs": [
+  {
+   "name": "Elfetabart Drozuntecan",
+   "n": 3
+  },
+  {
+   "name": "Pumitamig",
+   "n": 2
+  },
+  {
+   "name": "Zocilurtatug Pelitecan",
+   "n": 2
+  },
   {
    "name": "Telisotuzumab Vedotin",
    "n": 1
@@ -176,15 +250,7 @@
    "n": 1
   },
   {
-   "name": "Sturlimogene Erparepvec",
-   "n": 1
-  },
-  {
    "name": "ALK-201",
-   "n": 1
-  },
-  {
-   "name": "Ixotatug vedotin",
    "n": 1
   },
   {
@@ -192,7 +258,23 @@
    "n": 1
   },
   {
+   "name": "Sacituzumab Drozuntecan",
+   "n": 1
+  },
+  {
    "name": "SHR-4849",
+   "n": 1
+  },
+  {
+   "name": "Risvutatug Rezetecan",
+   "n": 1
+  },
+  {
+   "name": "Tarlatamab",
+   "n": 1
+  },
+  {
+   "name": "Obrixtamig",
    "n": 1
   }
  ]
